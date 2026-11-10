@@ -1,53 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Terminal, ChevronRight } from 'lucide-react';
 
 interface BootSequenceProps {
   onComplete: () => void;
 }
 
 export const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
-  const [lines, setLines] = useState<string[]>([]);
-  const [progress, setProgress] = useState(0);
-
   const bootScript = [
     "Initializing Portfolio...",
     "[✓] Loading assets...",
     "[✓] Mounting command interface...",
     "[✓] Initializing VENKY AI neural matrix...",
     "[✓] Loading engineering modules & CAD blueprints...",
-    "[✓] Ready."
+    "[✓] System Online. Launching Engineering Cockpit..."
   ];
 
+  const [stepIndex, setStepIndex] = useState(1);
+
   useEffect(() => {
-    let currentStep = 0;
-    const interval = setInterval(() => {
-      if (currentStep < bootScript.length) {
-        setLines(prev => [...prev, bootScript[currentStep]]);
-        setProgress(Math.round(((currentStep + 1) / bootScript.length) * 100));
-        currentStep++;
-      } else {
-        clearInterval(interval);
-        setTimeout(onComplete, 400);
-      }
-    }, 380);
+    const timer = setInterval(() => {
+      setStepIndex((prev) => {
+        if (prev < bootScript.length) {
+          return prev + 1;
+        } else {
+          clearInterval(timer);
+          setTimeout(() => {
+            onComplete();
+          }, 350);
+          return prev;
+        }
+      });
+    }, 350);
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        clearInterval(interval);
+        clearInterval(timer);
         onComplete();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      clearInterval(interval);
+      clearInterval(timer);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [onComplete]);
 
+  const visibleLines = bootScript.slice(0, stepIndex);
+  const progress = Math.min(100, Math.round((stepIndex / bootScript.length) * 100));
+
   return (
     <div className="fixed inset-0 z-50 bg-[#0B0F1A] flex flex-col items-center justify-center p-4 font-mono select-none">
-      <div className="w-full max-w-lg bg-[#101B2B] border border-[#00D4FF] rounded-lg shadow-[0_0_50px_rgba(0,212,255,0.2)] overflow-hidden">
+      <div className="w-full max-w-lg bg-[#101B2B] border border-[#00D4FF] rounded-lg shadow-[0_0_50px_rgba(0,212,255,0.25)] overflow-hidden">
         {/* Terminal Header */}
         <div className="bg-[#14243A] px-4 py-2.5 border-b border-[#182A42] flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -56,7 +60,7 @@ export const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
           </div>
           <button
             onClick={onComplete}
-            className="text-[11px] text-[#91A8BF] hover:text-[#00D4FF] border border-[#182A42] hover:border-[#00D4FF] px-2 py-0.5 rounded transition-all"
+            className="text-[11px] text-[#91A8BF] hover:text-[#00D4FF] border border-[#182A42] hover:border-[#00D4FF] px-2 py-0.5 rounded transition-all cursor-pointer"
           >
             [ESC] Skip Boot
           </button>
@@ -64,15 +68,15 @@ export const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
 
         {/* Boot Terminal Screen */}
         <div className="p-6 space-y-2.5 text-xs sm:text-sm min-h-[220px]">
-          {lines.map((line, idx) => (
+          {visibleLines.map((line, idx) => (
             <div key={idx} className="flex items-center gap-2 text-[#EAF5FF]">
               <ChevronRight className="w-3.5 h-3.5 text-[#00D4FF] shrink-0" />
-              <span className={line.includes('[✓]') ? 'text-[#00E599]' : 'text-[#00D4FF]'}>
+              <span className={line && line.includes('[✓]') ? 'text-[#00E599]' : 'text-[#00D4FF]'}>
                 {line}
               </span>
             </div>
           ))}
-          {lines.length < bootScript.length && (
+          {stepIndex < bootScript.length && (
             <div className="flex items-center gap-2 text-[#00D4FF]">
               <span className="w-2.5 h-4 bg-[#00D4FF] inline-block cmd-cursor" />
             </div>

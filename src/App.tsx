@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, Component, ErrorInfo, ReactNode } from 'react';
 import { BootSequence } from './components/terminal/BootSequence';
 import { Navbar } from './components/layout/Navbar';
 import { HeroSection } from './sections/HeroSection';
@@ -14,11 +14,60 @@ import { ContactSection } from './sections/ContactSection';
 import { Footer } from './components/layout/Footer';
 import { VenkyAssistant } from './components/assistant/VenkyAssistant';
 import { ProjectModal } from './components/project/ProjectModal';
-import { projectsData, ProjectItem } from './data/projects';
+import { projectsData } from './data/projects';
 import { matchAssistantQuery, SpeechService } from './services/assistantEngine';
-import { Bot, Sparkles, X, Terminal } from 'lucide-react';
+import { Sparkles, AlertTriangle } from 'lucide-react';
 
-export function App() {
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  public state: ErrorBoundaryState = { hasError: false };
+
+  public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Uncaught error in Command Center:', error, errorInfo);
+  }
+
+  public render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-[#0B0F1A] text-[#EAF5FF] font-mono flex items-center justify-center p-6">
+          <div className="max-w-md w-full bg-[#101B2B] border border-red-500 rounded-lg p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
+              <AlertTriangle className="w-5 h-5 text-red-400" />
+              <span>COMMAND_CENTER // SYSTEM RECOVERY</span>
+            </div>
+            <p className="text-xs text-[#91A8BF]">
+              A runtime anomaly occurred: {this.state.error?.message}
+            </p>
+            <button
+              onClick={() => {
+                sessionStorage.clear();
+                window.location.href = window.location.pathname;
+              }}
+              className="px-4 py-2 bg-[#00D4FF] hover:bg-white text-black font-bold text-xs rounded transition-all"
+            >
+              Reboot Command Center
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+export function AppContent() {
   const [bootCompleted, setBootCompleted] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
     const urlParams = new URLSearchParams(window.location.search);
@@ -66,10 +115,10 @@ export function App() {
     }
   }, [voiceEnabled]);
 
-  const handleFinishBoot = () => {
+  const handleFinishBoot = useCallback(() => {
     sessionStorage.setItem('boot_done', 'true');
     setBootCompleted(true);
-  };
+  }, []);
 
   const handleNavigate = (sectionId: string) => {
     setActiveSection(sectionId);
@@ -132,7 +181,7 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-[#0B0F1A] text-[#EAF5FF] font-mono selection:bg-[#00D4FF] selection:text-[#0B0F1A] relative cyber-grid">
-      {/* 1. Terminal Boot Sequence */}
+      {/* 1. Terminal Boot Sequence Overlay */}
       {!bootCompleted && (
         <BootSequence onComplete={handleFinishBoot} />
       )}
@@ -226,6 +275,14 @@ export function App() {
         onClose={() => setSelectedProjectId(null)}
       />
     </div>
+  );
+}
+
+export function App() {
+  return (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
   );
 }
 
