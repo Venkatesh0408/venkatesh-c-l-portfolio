@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: #0B0F1A;
+    --panel-main: #101B2B;
+    --panel-sec: #14243A;
+    --border-subtle: #182A42;
+    --cyan-accent: #00D4FF;
+    --blue-accent: #007BFF;
+    --text-primary: #EAF5FF;
+    --text-muted: #91A8BF;
+  }
+
+  * {
+    font-family: 'Consolas', 'Lucida Console', 'Courier New', 'Fira Code', 'JetBrains Mono', monospace !important;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #0B0F1A;
+    color: #EAF5FF;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom CMD / Terminal Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #080C14;
+}
+::-webkit-scrollbar-thumb {
+  background: #14243A;
+  border: 1px solid #00D4FF44;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00D4FF;
+  box-shadow: 0 0 10px #00D4FF;
+}
+
+/* Terminal Scanline & Blueprint Grid FX */
+.cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(0, 212, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.cyber-panel {
+  background: rgba(16, 27, 43, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid #182A42;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.cyber-panel-active {
+  border-color: #00D4FF;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.25), inset 0 0 15px rgba(0, 212, 255, 0.05);
+}
+
+.glow-text-cyan {
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+}
+
+.glow-text-blue {
+  text-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+}
+
+/* Blinking CMD Cursor */
+@keyframes cmdBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.cmd-cursor {
+  animation: cmdBlink 1s infinite;
+}
+
+/* Waveform pulse animation */
+@keyframes wavePulse {
+  0%, 100% { transform: scaleY(0.2); }
+  50% { transform: scaleY(1); }
+}
+
+.wave-bar {
+  transform-origin: center;
+  animation: wavePulse 1.2s ease-in-out infinite;
+}
