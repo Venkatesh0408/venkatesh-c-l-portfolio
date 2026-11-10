@@ -4,10 +4,10 @@
 
 @layer base {
   :root {
-    --bg-main: #0B0F1A;
-    --panel-main: #101B2B;
-    --panel-sec: #14243A;
-    --border-subtle: #182A42;
+    --bg-main: #000000;
+    --panel-main: #050B14;
+    --panel-sec: #0A1220;
+    --border-subtle: #14243A;
     --cyan-accent: #00D4FF;
     --blue-accent: #007BFF;
     --text-primary: #EAF5FF;
@@ -20,7 +20,7 @@
   }
 
   body {
-    background-color: #0B0F1A;
+    background-color: #000000;
     color: #EAF5FF;
     overflow-x: hidden;
   }
@@ -32,10 +32,10 @@
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #080C14;
+  background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: #14243A;
+  background: #0A1220;
   border: 1px solid #00D4FF44;
   border-radius: 2px;
 }
@@ -47,9 +47,9 @@
 /* Terminal Scanline & Blueprint Grid FX */
 .cyber-grid {
   background-image: 
-    linear-gradient(to right, rgba(0, 212, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
+    linear-gradient(to right, rgba(0, 123, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 123, 255, 0.05) 1px, transparent 1px);
+  background-size: 36px 36px;
 }
 
 .cyber-panel {

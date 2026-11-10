@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback, Component, ErrorInfo, ReactNode } from 'react';
 import { BootSequence } from './components/terminal/BootSequence';
-import { Navbar } from './components/layout/Navbar';
-import { HeroSection } from './sections/HeroSection';
-import { BottomPanels } from './components/layout/BottomPanels';
-import { AboutSection } from './sections/AboutSection';
-import { EducationSection } from './sections/EducationSection';
-import { ExperienceSection } from './sections/ExperienceSection';
-import { ProjectsSection } from './sections/ProjectsSection';
-import { SkillsSection } from './sections/SkillsSection';
-import { AchievementsSection } from './sections/AchievementsSection';
-import { LanguagesSection } from './sections/LanguagesSection';
-import { ContactSection } from './sections/ContactSection';
-import { Footer } from './components/layout/Footer';
+import { StepNavigator, stepsList } from './components/layout/StepNavigator';
+import { Step1Hero } from './sections/steps/Step1Hero';
+import { Step2Education } from './sections/steps/Step2Education';
+import { Step3Experience } from './sections/steps/Step3Experience';
+import { Step4Projects } from './sections/steps/Step4Projects';
+import { Step5Skills } from './sections/steps/Step5Skills';
+import { Step6Achievements } from './sections/steps/Step6Achievements';
+import { Step7Contact } from './sections/steps/Step7Contact';
 import { VenkyAssistant } from './components/assistant/VenkyAssistant';
 import { ProjectModal } from './components/project/ProjectModal';
 import { projectsData } from './data/projects';
@@ -41,8 +37,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#0B0F1A] text-[#EAF5FF] font-mono flex items-center justify-center p-6">
-          <div className="max-w-md w-full bg-[#101B2B] border border-red-500 rounded-lg p-6 space-y-4 shadow-2xl">
+        <div className="min-h-screen bg-[#000000] text-[#EAF5FF] font-mono flex items-center justify-center p-6">
+          <div className="max-w-md w-full bg-[#050B14] border border-red-500 rounded-lg p-6 space-y-4 shadow-2xl">
             <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
               <AlertTriangle className="w-5 h-5 text-red-400" />
               <span>COMMAND_CENTER // SYSTEM RECOVERY</span>
@@ -55,7 +51,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
                 sessionStorage.clear();
                 window.location.href = window.location.pathname;
               }}
-              className="px-4 py-2 bg-[#00D4FF] hover:bg-white text-black font-bold text-xs rounded transition-all"
+              className="px-4 py-2 bg-[#00D4FF] hover:bg-white text-black font-bold text-xs rounded transition-all cursor-pointer"
             >
               Reboot Command Center
             </button>
@@ -74,7 +70,19 @@ export function AppContent() {
     if (urlParams.get('noboot') === 'true') return true;
     return sessionStorage.getItem('boot_done') === 'true';
   });
-  const [activeSection, setActiveSection] = useState<string>('hero');
+
+  const [currentStepIndex, setCurrentStepIndex] = useState<number>(() => {
+    if (typeof window === 'undefined') return 0;
+    const urlParams = new URLSearchParams(window.location.search);
+    const stepParam = urlParams.get('step');
+    if (stepParam) {
+      const parsed = parseInt(stepParam, 10);
+      if (!isNaN(parsed) && parsed >= 0 && parsed < stepsList.length) return parsed;
+      const namedIndex = stepsList.findIndex(s => s.id.toLowerCase() === stepParam.toLowerCase() || s.cmd.toLowerCase() === stepParam.toLowerCase());
+      if (namedIndex !== -1) return namedIndex;
+    }
+    return 0;
+  });
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
@@ -120,14 +128,6 @@ export function AppContent() {
     setBootCompleted(true);
   }, []);
 
-  const handleNavigate = (sectionId: string) => {
-    setActiveSection(sectionId);
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   const handleToggleGlobalMic = () => {
     if (isListening) {
       if (recognitionRef.current) recognitionRef.current.stop();
@@ -148,6 +148,32 @@ export function AppContent() {
     }
   };
 
+  const navigateToSectionOrStep = (target: string) => {
+    // Map section IDs to Step indexes
+    const stepMap: Record<string, number> = {
+      'identity': 0,
+      'hero': 0,
+      'about': 0,
+      'education': 1,
+      'academics': 1,
+      'experience': 2,
+      'internships': 2,
+      'projects': 3,
+      'systems': 3,
+      'skills': 4,
+      'toolchain': 4,
+      'achievements': 5,
+      'credentials': 5,
+      'contact': 6,
+      'comms': 6
+    };
+
+    if (target in stepMap) {
+      setCurrentStepIndex(stepMap[target]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const handleGlobalAssistantQuery = (query: string) => {
     const matched = matchAssistantQuery(query);
 
@@ -161,9 +187,9 @@ export function AppContent() {
       );
     }
 
-    // Scroll to section
+    // Step navigation guidance!
     if (matched.navigationTarget) {
-      handleNavigate(matched.navigationTarget);
+      navigateToSectionOrStep(matched.navigationTarget);
     }
 
     // Modal action
@@ -180,17 +206,19 @@ export function AppContent() {
   const activeProject = projectsData.find(p => p.id === selectedProjectId) || null;
 
   return (
-    <div className="min-h-screen bg-[#0B0F1A] text-[#EAF5FF] font-mono selection:bg-[#00D4FF] selection:text-[#0B0F1A] relative cyber-grid">
+    <div className="min-h-screen bg-[#000000] text-[#EAF5FF] font-mono selection:bg-[#00D4FF] selection:text-[#000000] relative cyber-grid">
       {/* 1. Terminal Boot Sequence Overlay */}
       {!bootCompleted && (
         <BootSequence onComplete={handleFinishBoot} />
       )}
 
-      {/* 2. Top Command Navbar */}
-      <Navbar
-        activeSection={activeSection}
-        onNavigate={handleNavigate}
-        onToggleAssistant={() => setIsAssistantOpen(!isAssistantOpen)}
+      {/* 2. Top Step Pipeline & Navigator */}
+      <StepNavigator
+        currentStepIndex={currentStepIndex}
+        onSelectStep={(idx) => {
+          setCurrentStepIndex(idx);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
         voiceEnabled={voiceEnabled}
         onToggleVoice={() => {
           if (voiceEnabled) {
@@ -201,48 +229,72 @@ export function AppContent() {
             setVoiceEnabled(true);
           }
         }}
-      />
-
-      {/* 3. Main Hero Console Cockpit */}
-      <HeroSection
-        onNavigate={handleNavigate}
         onOpenAssistant={() => setIsAssistantOpen(true)}
-        isListening={isListening}
-        isSpeaking={isSpeaking}
-        onToggleMic={handleToggleGlobalMic}
-        onAskQuestion={handleGlobalAssistantQuery}
       />
 
-      {/* 4. Bottom Panels (Animations Storyboard, AI Bot Live Hub, Key Info & Theme) */}
-      <BottomPanels
-        onAskQuestion={handleGlobalAssistantQuery}
-        isListening={isListening}
-        isSpeaking={isSpeaking}
-        onToggleMic={handleToggleGlobalMic}
-      />
+      {/* 3. Active Step View (Step-by-step with animated transitions) */}
+      <main className="pt-16 pb-12 transition-all duration-300">
+        {currentStepIndex === 0 && (
+          <Step1Hero
+            onNextStep={() => setCurrentStepIndex(1)}
+            onOpenAssistant={() => setIsAssistantOpen(true)}
+            isListening={isListening}
+            isSpeaking={isSpeaking}
+            onToggleMic={handleToggleGlobalMic}
+          />
+        )}
 
-      {/* 5. Detailed Case Studies & Engineering Sections */}
-      <div className="space-y-6">
-        <AboutSection />
-        <EducationSection />
-        <ExperienceSection />
-        <ProjectsSection onOpenProjectModal={(id) => setSelectedProjectId(id)} />
-        <SkillsSection />
-        <AchievementsSection />
-        <LanguagesSection />
-        <ContactSection />
-      </div>
+        {currentStepIndex === 1 && (
+          <Step2Education
+            onPrevStep={() => setCurrentStepIndex(0)}
+            onNextStep={() => setCurrentStepIndex(2)}
+          />
+        )}
 
-      {/* 6. Footer */}
-      <Footer />
+        {currentStepIndex === 2 && (
+          <Step3Experience
+            onPrevStep={() => setCurrentStepIndex(1)}
+            onNextStep={() => setCurrentStepIndex(3)}
+          />
+        )}
 
-      {/* 7. Floating VENKY AI Command Button */}
+        {currentStepIndex === 3 && (
+          <Step4Projects
+            onPrevStep={() => setCurrentStepIndex(2)}
+            onNextStep={() => setCurrentStepIndex(4)}
+            onOpenProjectModal={(id) => setSelectedProjectId(id)}
+          />
+        )}
+
+        {currentStepIndex === 4 && (
+          <Step5Skills
+            onPrevStep={() => setCurrentStepIndex(3)}
+            onNextStep={() => setCurrentStepIndex(5)}
+          />
+        )}
+
+        {currentStepIndex === 5 && (
+          <Step6Achievements
+            onPrevStep={() => setCurrentStepIndex(4)}
+            onNextStep={() => setCurrentStepIndex(6)}
+          />
+        )}
+
+        {currentStepIndex === 6 && (
+          <Step7Contact
+            onPrevStep={() => setCurrentStepIndex(5)}
+            onRestartTour={() => setCurrentStepIndex(0)}
+          />
+        )}
+      </main>
+
+      {/* 4. Floating VENKY AI Command Button */}
       <div className="fixed bottom-5 right-5 z-40">
         <button
           onClick={() => setIsAssistantOpen(!isAssistantOpen)}
-          className={`px-4 py-2.5 rounded-full border shadow-[0_0_20px_rgba(0,212,255,0.4)] flex items-center gap-2 font-bold text-xs select-none transition-all duration-300 ${
+          className={`px-4 py-2.5 rounded-full border shadow-[0_0_25px_rgba(0,212,255,0.4)] flex items-center gap-2 font-bold text-xs select-none transition-all duration-300 cursor-pointer ${
             isAssistantOpen
-              ? 'bg-[#14243A] text-white border-[#00D4FF]'
+              ? 'bg-[#002244] text-white border-[#00D4FF]'
               : 'bg-[#00D4FF] hover:bg-white text-black border-[#00D4FF]'
           }`}
           title="Open VENKY AI Voice & Command Assistant"
@@ -253,12 +305,12 @@ export function AppContent() {
         </button>
       </div>
 
-      {/* 8. Slide-over VENKY AI Drawer */}
+      {/* 5. Slide-over VENKY AI Drawer */}
       {isAssistantOpen && (
         <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-[440px] shadow-2xl animate-in slide-in-from-right duration-300">
           <VenkyAssistant
             onNavigateSection={(sec) => {
-              handleNavigate(sec);
+              navigateToSectionOrStep(sec);
             }}
             onOpenProjectModal={(pId) => {
               setSelectedProjectId(pId);
@@ -269,7 +321,7 @@ export function AppContent() {
         </div>
       )}
 
-      {/* 9. Project Detail Dossier Modal */}
+      {/* 6. Project Detail Dossier Modal */}
       <ProjectModal
         project={activeProject}
         onClose={() => setSelectedProjectId(null)}
