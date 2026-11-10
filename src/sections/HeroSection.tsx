@@ -76,8 +76,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <section id="hero" className="relative pt-20 pb-12 px-4 sm:px-6 max-w-7xl mx-auto font-mono">
+      {/* Full-width Kali Linux Background Image Layer */}
+      <div
+        className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/kali-portfolio-background.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat"
+        }}
+      >
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/80" />
+      </div>
+
       {/* Top Main Command Cockpit Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column (Terminal & Hero Titles) */}
         <div className="lg:col-span-7 space-y-6">
           {/* Hero Terminal Card */}

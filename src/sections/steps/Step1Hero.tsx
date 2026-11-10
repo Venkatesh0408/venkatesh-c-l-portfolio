@@ -1,7 +1,6 @@
 import React from 'react';
 import { Terminal, Download, ArrowRight, Mail, Phone, Sparkles, User, ShieldCheck } from 'lucide-react';
 import { profileData } from '../../data/profile';
-import { KaliSnakeDragon } from '../../components/ui/KaliSnakeDragon';
 import { TelemetryPoint } from '../../components/ui/TelemetryPoint';
 import { CircularWaveform } from '../../components/assistant/CircularWaveform';
 import { GithubIcon, LinkedinIcon } from '../../components/ui/Icons';
@@ -23,11 +22,20 @@ export const Step1Hero: React.FC<Step1HeroProps> = ({
 }) => {
   return (
     <div className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-between py-6 px-4 font-mono select-none">
-      {/* Background Kali Linux Blue Snake Dragon */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-35 pointer-events-none overflow-hidden z-0">
-        <div className="w-[120%] max-w-4xl scale-110 sm:scale-100">
-          <KaliSnakeDragon />
-        </div>
+      {/* Full-width Kali Linux Background Image Layer */}
+      <div
+        className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/kali-portfolio-background.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat"
+        }}
+      >
+        {/* Subtle dark transparent overlay to maintain high-contrast text readability */}
+        <div className="absolute inset-0 bg-black/60" />
+        {/* Subtle gradient vignette to seamlessly anchor top and bottom borders */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/80" />
       </div>
 
       {/* Main Cockpit Content */}
