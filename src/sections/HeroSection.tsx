@@ -132,7 +132,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <span className="text-[#00E599] font-bold">[+]</span>
                   <span className="text-[#91A8BF] w-16 shrink-0">Focus</span>
                   <span className="text-[#91A8BF]">:</span>
-                  <span className="text-[#EAF5FF]">{profileData.focus.join(' | ')}</span>
+                  <span className="text-[#EAF5FF]">{(profileData.focus || []).join(' | ')}</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-[#00E599] font-bold">[+]</span>

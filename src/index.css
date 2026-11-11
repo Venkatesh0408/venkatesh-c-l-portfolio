@@ -4,92 +4,95 @@
 
 @layer base {
   :root {
-    --bg-main: #000000;
-    --panel-main: #050B14;
-    --panel-sec: #0A1220;
-    --border-subtle: #14243A;
-    --cyan-accent: #00D4FF;
-    --blue-accent: #007BFF;
-    --text-primary: #EAF5FF;
-    --text-muted: #91A8BF;
+    --bg-base: #060913;
+    --bg-surface: #0B1220;
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --accent-blue: #087BFF;
+    --accent-cyan: #00D4FF;
   }
 
   * {
-    font-family: 'Consolas', 'Lucida Console', 'Courier New', 'Fira Code', 'JetBrains Mono', monospace !important;
     box-sizing: border-box;
   }
 
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
   body {
-    background-color: #000000;
-    color: #EAF5FF;
+    background-color: #060913;
+    color: #F8FAFC;
+    font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #FFFFFF;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 }
 
-/* Custom CMD / Terminal Scrollbar */
+/* Modern Professional Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #060913;
 }
 ::-webkit-scrollbar-thumb {
-  background: #0A1220;
-  border: 1px solid #00D4FF44;
-  border-radius: 2px;
+  background: #15243D;
+  border-radius: 4px;
+  border: 1px solid rgba(8, 123, 255, 0.2);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #00D4FF;
-  box-shadow: 0 0 10px #00D4FF;
+  background: #087BFF;
 }
 
-/* Terminal Scanline & Blueprint Grid FX */
-.cyber-grid {
+/* Subtle Tech Grid Background */
+.tech-grid {
   background-image: 
-    linear-gradient(to right, rgba(0, 123, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 123, 255, 0.05) 1px, transparent 1px);
-  background-size: 36px 36px;
+    linear-gradient(to right, rgba(8, 123, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(8, 123, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
-.cyber-panel {
-  background: rgba(16, 27, 43, 0.85);
-  backdrop-filter: blur(8px);
-  border: 1px solid #182A42;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  position: relative;
+/* Glassmorphism Card Style */
+.glass-panel {
+  background: rgba(11, 18, 32, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(22, 37, 61, 0.8);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cyber-panel-active {
-  border-color: #00D4FF;
-  box-shadow: 0 0 15px rgba(0, 212, 255, 0.25), inset 0 0 15px rgba(0, 212, 255, 0.05);
+.glass-panel:hover {
+  border-color: rgba(0, 212, 255, 0.4);
+  box-shadow: 0 20px 40px -15px rgba(8, 123, 255, 0.25);
 }
 
-.glow-text-cyan {
-  text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+/* Gradient Text */
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #FFFFFF 20%, #00D4FF 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.glow-text-blue {
-  text-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+.text-gradient-blue {
+  background: linear-gradient(135deg, #00D4FF 0%, #087BFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Blinking CMD Cursor */
-@keyframes cmdBlink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+/* Subtle circuit line animation */
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
 }
 
-.cmd-cursor {
-  animation: cmdBlink 1s infinite;
-}
-
-/* Waveform pulse animation */
-@keyframes wavePulse {
-  0%, 100% { transform: scaleY(0.2); }
-  50% { transform: scaleY(1); }
-}
-
-.wave-bar {
-  transform-origin: center;
-  animation: wavePulse 1.2s ease-in-out infinite;
+.circuit-glow {
+  animation: pulseSubtle 4s ease-in-out infinite;
 }

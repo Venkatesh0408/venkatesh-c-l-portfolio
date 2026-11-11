@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useRef, useCallback, Component, ErrorInfo, ReactNode } from 'react';
-import { BootSequence } from './components/terminal/BootSequence';
-import { StepNavigator, stepsList } from './components/layout/StepNavigator';
-import { Step1Hero } from './sections/steps/Step1Hero';
-import { Step2Education } from './sections/steps/Step2Education';
-import { Step3Experience } from './sections/steps/Step3Experience';
-import { Step4Projects } from './sections/steps/Step4Projects';
-import { Step5Skills } from './sections/steps/Step5Skills';
-import { Step6Achievements } from './sections/steps/Step6Achievements';
-import { Step7Contact } from './sections/steps/Step7Contact';
+import React, { useState, useEffect, useCallback, Component, ErrorInfo, ReactNode } from 'react';
+import { ModernNavbar } from './components/layout/ModernNavbar';
+import { ModernFooter } from './components/layout/ModernFooter';
+import { ModernHero } from './sections/ModernHero';
+import { ModernAbout } from './sections/ModernAbout';
+import { ModernEducation } from './sections/ModernEducation';
+import { ModernExperience } from './sections/ModernExperience';
+import { ModernProjects } from './sections/ModernProjects';
+import { ModernSkills } from './sections/ModernSkills';
+import { ModernAchievements } from './sections/ModernAchievements';
+import { ModernContact } from './sections/ModernContact';
 import { VenkyAssistant } from './components/assistant/VenkyAssistant';
 import { ProjectModal } from './components/project/ProjectModal';
 import { projectsData } from './data/projects';
-import { matchAssistantQuery, SpeechService } from './services/assistantEngine';
-import { Sparkles, AlertTriangle } from 'lucide-react';
+import { Bot, Sparkles, AlertTriangle } from 'lucide-react';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -31,29 +31,29 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error in Command Center:', error, errorInfo);
+    console.error('Uncaught error in Portfolio:', error, errorInfo);
   }
 
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#000000] text-[#EAF5FF] font-mono flex items-center justify-center p-6">
-          <div className="max-w-md w-full bg-[#050B14] border border-red-500 rounded-lg p-6 space-y-4 shadow-2xl">
+        <div className="min-h-screen bg-navy-950 text-white flex items-center justify-center p-6">
+          <div className="max-w-md w-full bg-navy-900 border border-red-500/50 rounded-2xl p-6 space-y-4 shadow-2xl">
             <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
               <AlertTriangle className="w-5 h-5 text-red-400" />
-              <span>COMMAND_CENTER // SYSTEM RECOVERY</span>
+              <span>SYSTEM RECOVERY // APPLICATION ERROR</span>
             </div>
-            <p className="text-xs text-[#91A8BF]">
-              A runtime anomaly occurred: {this.state.error?.message}
+            <p className="text-xs text-slate-300">
+              {this.state.error?.message || 'An unexpected error occurred.'}
             </p>
             <button
               onClick={() => {
                 sessionStorage.clear();
-                window.location.href = window.location.pathname;
+                window.location.reload();
               }}
-              className="px-4 py-2 bg-[#00D4FF] hover:bg-white text-black font-bold text-xs rounded transition-all cursor-pointer"
+              className="px-4 py-2 bg-accent-cyan text-navy-950 font-bold text-xs rounded-lg transition-all hover:bg-white"
             >
-              Reboot Command Center
+              Reload Portfolio
             </button>
           </div>
         </div>
@@ -64,253 +64,102 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 }
 
 export function AppContent() {
-  const [bootCompleted, setBootCompleted] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return true;
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('noboot') === 'true') return true;
-    return sessionStorage.getItem('boot_done') === 'true';
-  });
-
-  const [currentStepIndex, setCurrentStepIndex] = useState<number>(() => {
-    if (typeof window === 'undefined') return 0;
-    const urlParams = new URLSearchParams(window.location.search);
-    const stepParam = urlParams.get('step');
-    if (stepParam) {
-      const parsed = parseInt(stepParam, 10);
-      if (!isNaN(parsed) && parsed >= 0 && parsed < stepsList.length) return parsed;
-      const namedIndex = stepsList.findIndex(s => s.id.toLowerCase() === stepParam.toLowerCase() || s.cmd.toLowerCase() === stepParam.toLowerCase());
-      if (namedIndex !== -1) return namedIndex;
-    }
-    return 0;
-  });
+  const [activeSection, setActiveSection] = useState<string>('hero');
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
-  // Global Speech States
-  const [isListening, setIsListening] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [voiceEnabled, setVoiceEnabled] = useState(true);
-  const recognitionRef = useRef<any>(null);
-
+  // Active section observer on scroll
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const SpeechRec = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (SpeechRec) {
-      const rec = new SpeechRec();
-      rec.continuous = false;
-      rec.interimResults = false;
-      rec.lang = 'en-US';
+    const sectionIds = ['hero', 'about', 'education', 'experience', 'projects', 'skills', 'achievements', 'contact'];
 
-      rec.onstart = () => {
-        setIsListening(true);
-      };
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 200;
 
-      rec.onresult = (event: any) => {
-        setIsListening(false);
-        const transcript = event.results[0][0].transcript;
-        handleGlobalAssistantQuery(transcript);
-      };
-
-      rec.onerror = () => {
-        setIsListening(false);
-      };
-
-      rec.onend = () => {
-        setIsListening(false);
-      };
-
-      recognitionRef.current = rec;
-    }
-  }, [voiceEnabled]);
-
-  const handleFinishBoot = useCallback(() => {
-    sessionStorage.setItem('boot_done', 'true');
-    setBootCompleted(true);
-  }, []);
-
-  const handleToggleGlobalMic = () => {
-    if (isListening) {
-      if (recognitionRef.current) recognitionRef.current.stop();
-      setIsListening(false);
-    } else {
-      if (recognitionRef.current) {
-        SpeechService.stopSpeaking();
-        setIsSpeaking(false);
-        try {
-          recognitionRef.current.start();
-        } catch (e) {
-          console.warn(e);
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sectionIds[i]);
+        if (el && el.offsetTop <= scrollPosition) {
+          setActiveSection(sectionIds[i]);
+          break;
         }
-      } else {
-        // Fallback: Open Assistant Terminal Drawer
-        setIsAssistantOpen(true);
       }
-    }
-  };
-
-  const navigateToSectionOrStep = (target: string) => {
-    // Map section IDs to Step indexes
-    const stepMap: Record<string, number> = {
-      'identity': 0,
-      'hero': 0,
-      'about': 0,
-      'education': 1,
-      'academics': 1,
-      'experience': 2,
-      'internships': 2,
-      'projects': 3,
-      'systems': 3,
-      'skills': 4,
-      'toolchain': 4,
-      'achievements': 5,
-      'credentials': 5,
-      'contact': 6,
-      'comms': 6
     };
 
-    if (target in stepMap) {
-      setCurrentStepIndex(stepMap[target]);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  const handleGlobalAssistantQuery = (query: string) => {
-    const matched = matchAssistantQuery(query);
-
-    // Speak response
-    if (voiceEnabled && SpeechService.isSpeechSynthesisSupported()) {
-      setIsSpeaking(true);
-      SpeechService.speak(
-        matched.spokenText,
-        () => setIsSpeaking(false),
-        () => setIsSpeaking(false)
-      );
+  const scrollToSection = useCallback((sectionId: string) => {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      setActiveSection(sectionId);
     }
-
-    // Step navigation guidance!
-    if (matched.navigationTarget) {
-      navigateToSectionOrStep(matched.navigationTarget);
-    }
-
-    // Modal action
-    if (matched.action === 'openModal' && matched.actionPayload) {
-      setSelectedProjectId(matched.actionPayload);
-    } else if (matched.action === 'downloadResume') {
-      const link = document.createElement('a');
-      link.href = '/assets/Venkatesh_CL_RESUME.pdf';
-      link.download = 'Venkatesh_CL_RESUME.pdf';
-      link.click();
-    }
-  };
+  }, []);
 
   const activeProject = projectsData.find(p => p.id === selectedProjectId) || null;
 
   return (
-    <div className="min-h-screen bg-[#000000] text-[#EAF5FF] font-mono selection:bg-[#00D4FF] selection:text-[#000000] relative cyber-grid">
-      {/* 1. Terminal Boot Sequence Overlay */}
-      {!bootCompleted && (
-        <BootSequence onComplete={handleFinishBoot} />
-      )}
-
-      {/* 2. Top Step Pipeline & Navigator */}
-      <StepNavigator
-        currentStepIndex={currentStepIndex}
-        onSelectStep={(idx) => {
-          setCurrentStepIndex(idx);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        voiceEnabled={voiceEnabled}
-        onToggleVoice={() => {
-          if (voiceEnabled) {
-            SpeechService.stopSpeaking();
-            setIsSpeaking(false);
-            setVoiceEnabled(false);
-          } else {
-            setVoiceEnabled(true);
-          }
-        }}
-        onOpenAssistant={() => setIsAssistantOpen(true)}
+    <div className="min-h-screen bg-navy-950 text-slate-100 selection:bg-accent-cyan selection:text-navy-950 relative font-sans">
+      {/* 1. Modern Glassmorphic Navigation Header */}
+      <ModernNavbar
+        activeSection={activeSection}
+        onNavigate={scrollToSection}
+        onToggleAssistant={() => setIsAssistantOpen(!isAssistantOpen)}
       />
 
-      {/* 3. Active Step View (Step-by-step with animated transitions) */}
-      <main className="pt-16 pb-12 transition-all duration-300">
-        {currentStepIndex === 0 && (
-          <Step1Hero
-            onNextStep={() => setCurrentStepIndex(1)}
-            onOpenAssistant={() => setIsAssistantOpen(true)}
-            isListening={isListening}
-            isSpeaking={isSpeaking}
-            onToggleMic={handleToggleGlobalMic}
-          />
-        )}
+      {/* 2. Main Single-Page Sections */}
+      <main className="relative">
+        <ModernHero
+          onExploreProjects={() => scrollToSection('projects')}
+          onContactMe={() => scrollToSection('contact')}
+          onOpenAssistant={() => setIsAssistantOpen(true)}
+        />
 
-        {currentStepIndex === 1 && (
-          <Step2Education
-            onPrevStep={() => setCurrentStepIndex(0)}
-            onNextStep={() => setCurrentStepIndex(2)}
-          />
-        )}
+        <ModernAbout />
 
-        {currentStepIndex === 2 && (
-          <Step3Experience
-            onPrevStep={() => setCurrentStepIndex(1)}
-            onNextStep={() => setCurrentStepIndex(3)}
-          />
-        )}
+        <ModernEducation />
 
-        {currentStepIndex === 3 && (
-          <Step4Projects
-            onPrevStep={() => setCurrentStepIndex(2)}
-            onNextStep={() => setCurrentStepIndex(4)}
-            onOpenProjectModal={(id) => setSelectedProjectId(id)}
-          />
-        )}
+        <ModernExperience />
 
-        {currentStepIndex === 4 && (
-          <Step5Skills
-            onPrevStep={() => setCurrentStepIndex(3)}
-            onNextStep={() => setCurrentStepIndex(5)}
-          />
-        )}
+        <ModernProjects
+          onOpenProjectModal={(id) => setSelectedProjectId(id)}
+        />
 
-        {currentStepIndex === 5 && (
-          <Step6Achievements
-            onPrevStep={() => setCurrentStepIndex(4)}
-            onNextStep={() => setCurrentStepIndex(6)}
-          />
-        )}
+        <ModernSkills />
 
-        {currentStepIndex === 6 && (
-          <Step7Contact
-            onPrevStep={() => setCurrentStepIndex(5)}
-            onRestartTour={() => setCurrentStepIndex(0)}
-          />
-        )}
+        <ModernAchievements />
+
+        <ModernContact
+          onOpenAssistant={() => setIsAssistantOpen(true)}
+        />
       </main>
 
-      {/* 4. Floating VENKY AI Command Button */}
-      <div className="fixed bottom-5 right-5 z-40">
+      {/* 3. Modern Engineering Footer */}
+      <ModernFooter onNavigate={scrollToSection} />
+
+      {/* 4. Floating VENKY AI Assistant Trigger */}
+      <div className="fixed bottom-6 right-6 z-40">
         <button
           onClick={() => setIsAssistantOpen(!isAssistantOpen)}
-          className={`px-4 py-2.5 rounded-full border shadow-[0_0_25px_rgba(0,212,255,0.4)] flex items-center gap-2 font-bold text-xs select-none transition-all duration-300 cursor-pointer ${
+          className={`px-4 py-3 rounded-full border shadow-[0_4px_25px_rgba(0,212,255,0.35)] flex items-center gap-2.5 font-bold text-xs select-none transition-all duration-300 transform hover:scale-105 ${
             isAssistantOpen
-              ? 'bg-[#002244] text-white border-[#00D4FF]'
-              : 'bg-[#00D4FF] hover:bg-white text-black border-[#00D4FF]'
+              ? 'bg-navy-900 text-white border-accent-cyan'
+              : 'bg-gradient-to-r from-accent-blue to-accent-cyan text-white border-white/20'
           }`}
-          title="Open VENKY AI Voice & Command Assistant"
+          title="Open VENKY AI Assistant"
         >
-          <Sparkles className="w-4 h-4" />
-          <span>TALK TO VENKY AI</span>
+          <Bot className="w-4 h-4 text-white" />
+          <span>Ask VENKY AI</span>
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
         </button>
       </div>
 
       {/* 5. Slide-over VENKY AI Drawer */}
       {isAssistantOpen && (
-        <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-[440px] shadow-2xl animate-in slide-in-from-right duration-300">
+        <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-[450px] shadow-2xl animate-in slide-in-from-right duration-300">
           <VenkyAssistant
             onNavigateSection={(sec) => {
-              navigateToSectionOrStep(sec);
+              scrollToSection(sec);
             }}
             onOpenProjectModal={(pId) => {
               setSelectedProjectId(pId);
@@ -321,7 +170,7 @@ export function AppContent() {
         </div>
       )}
 
-      {/* 6. Project Detail Dossier Modal */}
+      {/* 6. Technical Dossier Project Modal */}
       <ProjectModal
         project={activeProject}
         onClose={() => setSelectedProjectId(null)}
