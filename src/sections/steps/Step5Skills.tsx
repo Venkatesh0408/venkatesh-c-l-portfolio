@@ -10,10 +10,10 @@ interface Step5SkillsProps {
 }
 
 export const Step5Skills: React.FC<Step5SkillsProps> = ({ onPrevStep, onNextStep }) => {
-  const embeddedSkills = skillsData.filter(s => s.category === "Embedded Systems" || s.category === "Sensors and Hardware Integration");
-  const industrialSkills = skillsData.filter(s => s.category === "PLC and Industrial Automation" || s.category === "Electrical and Electronics");
-  const cadSkills = skillsData.filter(s => s.category === "CAD and Solid Edge" || s.category === "Robotics and Automation");
-  const softwareSkills = skillsData.filter(s => s.category === "Arduino IDE" || s.category === "GitHub and project deployment tools");
+  const embeddedSkills = skillsData.filter(s => s.category === "Electronics and Embedded Systems");
+  const industrialSkills = skillsData.filter(s => s.category === "Industrial Automation");
+  const cadSkills = skillsData.filter(s => s.category === "CAD and Mechanical Design" || s.category === "Robotics and Automation");
+  const softwareSkills = skillsData.filter(s => s.category === "Software and Development Tools");
 
   return (
     <div className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-between py-8 px-4 font-mono select-none">

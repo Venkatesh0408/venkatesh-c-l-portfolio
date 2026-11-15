@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mic, Volume2, VolumeX, Send, Sparkles, Navigation, X, Bot, CheckCircle } from 'lucide-react';
+import { Mic, Volume2, VolumeX, Send, Sparkles, Navigation, X, Bot, Activity, Radio } from 'lucide-react';
 import { matchAssistantQuery, SpeechService } from '../../services/assistantEngine';
 import { AssistantIntent } from '../../data/faqKnowledgeBase';
 
@@ -19,11 +19,11 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
   const [messages, setMessages] = useState<Array<{ sender: 'venky' | 'user'; text: string; intent?: AssistantIntent }>>([
     {
       sender: 'venky',
-      text: "Hello! Welcome to Venkatesh's engineering portfolio. I'm VENKY AI, his interactive engineering assistant. I can guide you through his robotics projects, industrial internships at Arrow & XNG Automation, skills, academic scores, and achievements. Speak to me or click any prompt below!",
+      text: "Greetings! I am VENKY AI, Venkatesh's interactive robotics assistant. I can guide you through his Submersible Micro Robot prototype, 8 months of industrial training at Arrow & XNG Automation, technical toolchain, academic scores, and achievements. Speak to me or click any prompt below!",
       intent: {
         id: 'welcome',
         keywords: [],
-        spokenText: "Hello! Welcome to Venkatesh's engineering portfolio. I'm VENKY AI. What would you like to explore?",
+        spokenText: "Greetings! I am VENKY AI, Venkatesh's robotics engineering assistant. What would you like to explore?",
         displayedText: "",
         suggestedQuestions: [
           "Tell me about Venkatesh",
@@ -69,11 +69,11 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
       recognition.onerror = (event: any) => {
         setIsListening(false);
         if (event.error === 'not-allowed') {
-          setActiveSpeechError('Microphone permission denied. Continuing in typed chat mode.');
+          setActiveSpeechError('Microphone access denied. Continuing in typed chat mode.');
         } else if (event.error === 'no-speech') {
-          setActiveSpeechError('No speech detected. Please speak clearly or type below.');
+          setActiveSpeechError('No audio input detected. Please speak or type below.');
         } else {
-          setActiveSpeechError(`Audio note: ${event.error}`);
+          setActiveSpeechError(`Audio notice: ${event.error}`);
         }
       };
 
@@ -107,7 +107,7 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
           console.warn(e);
         }
       } else {
-        setActiveSpeechError('Speech recognition is not supported in this browser. Please use text input.');
+        setActiveSpeechError('Speech recognition is unavailable in this browser. Please use keyboard input.');
       }
     }
   };
@@ -163,30 +163,30 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-navy-950 border-l border-navy-800 shadow-2xl overflow-hidden text-sm">
-      {/* Modern Header */}
-      <div className="bg-navy-900 px-5 py-4 border-b border-navy-800 flex items-center justify-between select-none">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-accent-blue/20 border border-accent-cyan/30 flex items-center justify-center text-accent-cyan">
-            <Bot className="w-4 h-4 text-accent-cyan" />
+    <div className="flex flex-col h-full bg-space-950 border-l border-cyan-500/30 shadow-[0_0_50px_rgba(0,212,255,0.2)] overflow-hidden text-sm">
+      {/* Futuristic HUD Header */}
+      <div className="bg-space-900 px-5 py-4 border-b border-cyan-500/20 flex items-center justify-between select-none">
+        <div className="flex items-center gap-2.5 font-mono">
+          <div className="w-8 h-8 rounded-lg bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center text-cyan-400">
+            <Bot className="w-4 h-4 text-cyan-400" />
           </div>
           <div>
             <div className="text-white font-bold text-xs flex items-center gap-1.5">
-              <span>VENKY AI ASSISTANT</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>VENKY AI // ASSISTANT</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#10B981]" />
             </div>
             <div className="text-[10px] text-slate-400">Interactive Voice & Portfolio Guide</div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 font-mono">
           {/* Mute Voice Toggle */}
           <button
             onClick={handleToggleMute}
-            className={`p-1.5 rounded-lg text-xs flex items-center gap-1 transition-all ${
+            className={`p-1.5 rounded-lg text-xs flex items-center gap-1 transition-all cursor-pointer ${
               voiceMuted
                 ? 'bg-red-950/40 text-red-400 border border-red-800/50'
-                : 'bg-navy-800 text-accent-cyan border border-navy-700 hover:border-accent-cyan'
+                : 'bg-space-850 text-cyan-400 border border-space-700 hover:border-cyan-400'
             }`}
             title={voiceMuted ? "Unmute Voice" : "Mute Voice"}
           >
@@ -197,7 +197,7 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
           {onToggleFloating && (
             <button
               onClick={onToggleFloating}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-navy-800 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-space-800 transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -214,12 +214,12 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
               msg.sender === 'user' ? 'items-end' : 'items-start'
             }`}
           >
-            <div className="text-[10px] text-slate-400 mb-1 font-semibold flex items-center gap-1">
+            <div className="text-[10px] text-slate-400 mb-1 font-mono font-semibold flex items-center gap-1">
               {msg.sender === 'user' ? (
-                <span>YOU</span>
+                <span>COMMAND_INPUT</span>
               ) : (
-                <span className="text-accent-cyan flex items-center gap-1">
-                  <Sparkles className="w-2.5 h-2.5" /> VENKY AI
+                <span className="text-cyan-400 flex items-center gap-1">
+                  <Sparkles className="w-2.5 h-2.5" /> VENKY AI [AUTHORIZED RESPONDER]
                 </span>
               )}
             </div>
@@ -227,8 +227,8 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
             <div
               className={`p-3.5 rounded-2xl max-w-[92%] leading-relaxed ${
                 msg.sender === 'user'
-                  ? 'bg-gradient-to-r from-accent-blue to-accent-cyan text-white shadow-md rounded-tr-sm'
-                  : 'bg-navy-900 text-slate-200 border border-navy-800 shadow-md rounded-tl-sm'
+                  ? 'bg-gradient-to-r from-electric-500 to-cyan-500 text-white shadow-md rounded-tr-sm'
+                  : 'bg-space-900 text-slate-200 border border-space-800 shadow-md rounded-tl-sm'
               }`}
             >
               <div className="whitespace-pre-line text-xs sm:text-sm">
@@ -237,14 +237,14 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
 
               {/* Navigation Link Pill if present */}
               {msg.intent?.navigationTarget && (
-                <div className="mt-3 pt-2 border-t border-navy-700/80 flex items-center justify-between">
+                <div className="mt-3 pt-2 border-t border-space-800 flex items-center justify-between">
                   <button
                     onClick={() => onNavigateSection && onNavigateSection(msg.intent!.navigationTarget!)}
-                    className="text-[11px] text-accent-cyan hover:underline flex items-center gap-1 bg-accent-blue/15 px-2.5 py-1 rounded-md border border-accent-cyan/30"
+                    className="text-[11px] font-mono text-cyan-400 hover:underline flex items-center gap-1 bg-cyan-500/15 px-2.5 py-1 rounded-md border border-cyan-400/30 cursor-pointer"
                   >
-                    <Navigation className="w-3 h-3 text-accent-cyan" /> Scroll to #{msg.intent.navigationTarget}
+                    <Navigation className="w-3 h-3 text-cyan-400" /> Jump to #{msg.intent.navigationTarget}
                   </button>
-                  <span className="text-[10px] text-slate-400">Section linked</span>
+                  <span className="text-[10px] font-mono text-slate-400">Telemetry guidance</span>
                 </div>
               )}
             </div>
@@ -256,7 +256,7 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
                   <button
                     key={qIdx}
                     onClick={() => handlePromptClick(q)}
-                    className="text-[11px] bg-navy-900 hover:bg-navy-800 text-accent-cyan hover:text-white px-3 py-1.5 rounded-lg border border-accent-cyan/30 hover:border-accent-cyan transition-all flex items-center gap-1 font-medium"
+                    className="text-[11px] font-mono bg-space-900 hover:bg-space-850 text-cyan-400 hover:text-white px-3 py-1.5 rounded-lg border border-cyan-500/30 hover:border-cyan-400 transition-all flex items-center gap-1 font-medium cursor-pointer"
                   >
                     <span>›</span> {q}
                   </button>
@@ -268,7 +268,7 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
 
         {/* Speech Error Banner */}
         {activeSpeechError && (
-          <div className="p-3 bg-amber-950/30 border border-amber-600/40 rounded-xl text-amber-300 text-xs">
+          <div className="p-3 bg-amber-950/30 border border-amber-600/40 rounded-xl text-amber-300 text-xs font-mono">
             {activeSpeechError}
           </div>
         )}
@@ -277,7 +277,7 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
       </div>
 
       {/* Input Console Bar */}
-      <div className="bg-navy-900 p-3.5 border-t border-navy-800">
+      <div className="bg-space-900 p-3.5 border-t border-cyan-500/20">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -289,10 +289,10 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
           <button
             type="button"
             onClick={handleToggleMic}
-            className={`p-2.5 rounded-xl border transition-all flex items-center justify-center ${
+            className={`p-2.5 rounded-xl border transition-all flex items-center justify-center cursor-pointer ${
               isListening
-                ? 'bg-red-600/20 text-red-400 border-red-500 animate-pulse shadow-[0_0_12px_#ef4444]'
-                : 'bg-navy-950 text-accent-cyan border-navy-800 hover:border-accent-cyan'
+                ? 'bg-red-600/20 text-red-400 border-red-500 animate-pulse shadow-[0_0_15px_#ef4444]'
+                : 'bg-space-950 text-cyan-400 border-space-800 hover:border-cyan-400'
             }`}
             title={isListening ? "Listening... click to stop" : "Click to speak"}
           >
@@ -304,15 +304,15 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
             type="text"
             value={inputQuery}
             onChange={(e) => setInputQuery(e.target.value)}
-            placeholder={isListening ? "Listening to your voice..." : "Ask VENKY AI a question..."}
-            className="flex-1 bg-navy-950 border border-navy-800 focus:border-accent-cyan focus:outline-none rounded-xl py-2 px-3 text-xs sm:text-sm text-white placeholder-slate-500 transition-colors"
+            placeholder={isListening ? "Listening to your voice..." : "Ask VENKY AI or enter a topic..."}
+            className="flex-1 bg-space-950 border border-space-800 focus:border-cyan-400 focus:outline-none rounded-xl py-2 px-3 text-xs sm:text-sm text-white placeholder-slate-500 transition-colors font-mono"
           />
 
           {/* Send Button */}
           <button
             type="submit"
             disabled={!inputQuery.trim()}
-            className="px-4 py-2 bg-gradient-to-r from-accent-blue to-accent-cyan hover:opacity-95 text-white font-bold rounded-xl text-xs flex items-center gap-1 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-gradient-to-r from-electric-500 to-cyan-500 hover:opacity-95 text-white font-mono font-bold rounded-xl text-xs flex items-center gap-1 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-md"
           >
             <Send className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Ask</span>

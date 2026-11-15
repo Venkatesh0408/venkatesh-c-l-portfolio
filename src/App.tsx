@@ -12,7 +12,7 @@ import { ModernContact } from './sections/ModernContact';
 import { VenkyAssistant } from './components/assistant/VenkyAssistant';
 import { ProjectModal } from './components/project/ProjectModal';
 import { projectsData } from './data/projects';
-import { Bot, Sparkles, AlertTriangle } from 'lucide-react';
+import { Bot, AlertTriangle } from 'lucide-react';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -37,23 +37,23 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-navy-950 text-white flex items-center justify-center p-6">
-          <div className="max-w-md w-full bg-navy-900 border border-red-500/50 rounded-2xl p-6 space-y-4 shadow-2xl">
+        <div className="min-h-screen bg-space-950 text-white flex items-center justify-center p-6 font-mono">
+          <div className="max-w-md w-full bg-space-900 border border-red-500/50 rounded-2xl p-6 space-y-4 shadow-2xl">
             <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
               <AlertTriangle className="w-5 h-5 text-red-400" />
-              <span>SYSTEM RECOVERY // APPLICATION ERROR</span>
+              <span>SYSTEM RECOVERY // EXCEPTION_CAUGHT</span>
             </div>
             <p className="text-xs text-slate-300">
-              {this.state.error?.message || 'An unexpected error occurred.'}
+              {this.state.error?.message || 'An unexpected runtime anomaly occurred.'}
             </p>
             <button
               onClick={() => {
                 sessionStorage.clear();
                 window.location.reload();
               }}
-              className="px-4 py-2 bg-accent-cyan text-navy-950 font-bold text-xs rounded-lg transition-all hover:bg-white"
+              className="px-4 py-2 bg-cyan-500 text-black font-bold text-xs rounded-xl transition-all hover:bg-white cursor-pointer"
             >
-              Reload Portfolio
+              Reboot Command Center
             </button>
           </div>
         </div>
@@ -68,12 +68,24 @@ export function AppContent() {
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
-  // Active section observer on scroll
+  // Hash navigation on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const targetId = window.location.hash.replace('#', '');
+      const el = document.getElementById(targetId);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth' });
+          setActiveSection(targetId);
+        }, 300);
+      }
+    }
+  }, []);
   useEffect(() => {
     const sectionIds = ['hero', 'about', 'education', 'experience', 'projects', 'skills', 'achievements', 'contact'];
 
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
+      const scrollPosition = window.scrollY + 250;
 
       for (let i = sectionIds.length - 1; i >= 0; i--) {
         const el = document.getElementById(sectionIds[i]);
@@ -99,8 +111,8 @@ export function AppContent() {
   const activeProject = projectsData.find(p => p.id === selectedProjectId) || null;
 
   return (
-    <div className="min-h-screen bg-navy-950 text-slate-100 selection:bg-accent-cyan selection:text-navy-950 relative font-sans">
-      {/* 1. Modern Glassmorphic Navigation Header */}
+    <div className="min-h-screen bg-space-950 text-slate-100 selection:bg-cyan-500 selection:text-black relative font-sans">
+      {/* 1. Futuristic Glassmorphic Navigation Header */}
       <ModernNavbar
         activeSection={activeSection}
         onNavigate={scrollToSection}
@@ -134,29 +146,29 @@ export function AppContent() {
         />
       </main>
 
-      {/* 3. Modern Engineering Footer */}
+      {/* 3. Futuristic Engineering Footer */}
       <ModernFooter onNavigate={scrollToSection} />
 
       {/* 4. Floating VENKY AI Assistant Trigger */}
       <div className="fixed bottom-6 right-6 z-40">
         <button
           onClick={() => setIsAssistantOpen(!isAssistantOpen)}
-          className={`px-4 py-3 rounded-full border shadow-[0_4px_25px_rgba(0,212,255,0.35)] flex items-center gap-2.5 font-bold text-xs select-none transition-all duration-300 transform hover:scale-105 ${
+          className={`px-4 py-3 rounded-full border shadow-[0_4px_30px_rgba(0,212,255,0.4)] flex items-center gap-2.5 font-bold text-xs select-none transition-all duration-300 transform hover:scale-105 cursor-pointer font-mono ${
             isAssistantOpen
-              ? 'bg-navy-900 text-white border-accent-cyan'
-              : 'bg-gradient-to-r from-accent-blue to-accent-cyan text-white border-white/20'
+              ? 'bg-space-900 text-white border-cyan-400'
+              : 'bg-gradient-to-r from-electric-500 to-cyan-500 text-white border-cyan-400/40'
           }`}
           title="Open VENKY AI Assistant"
         >
           <Bot className="w-4 h-4 text-white" />
           <span>Ask VENKY AI</span>
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#10B981]" />
         </button>
       </div>
 
       {/* 5. Slide-over VENKY AI Drawer */}
       {isAssistantOpen && (
-        <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-[450px] shadow-2xl animate-in slide-in-from-right duration-300">
+        <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-[460px] shadow-2xl animate-in slide-in-from-right duration-300">
           <VenkyAssistant
             onNavigateSection={(sec) => {
               scrollToSection(sec);

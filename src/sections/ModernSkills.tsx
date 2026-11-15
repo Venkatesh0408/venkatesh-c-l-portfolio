@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Cpu, Zap, Code, ShieldCheck, CheckCircle2, Search, Sliders } from 'lucide-react';
+import { Search, ShieldCheck, Crosshair, CheckCircle2 } from 'lucide-react';
 import { skillsData, skillCategories, SkillCategory, SkillItem } from '../data/skills';
 
 export const ModernSkills: React.FC = () => {
@@ -18,58 +18,61 @@ export const ModernSkills: React.FC = () => {
   const getLevelBadgeClass = (level: SkillItem['level']) => {
     switch (level) {
       case 'Practical Proficiency':
-        return 'bg-emerald-950/40 text-emerald-400 border-emerald-500/40';
+        return 'bg-emerald-950/50 text-emerald-300 border-emerald-500/40';
       case 'Industrial Training':
-        return 'bg-accent-blue/15 text-accent-cyan border-accent-blue/40';
+        return 'bg-cyan-500/15 text-cyan-300 border-cyan-400/40';
       case 'Project-Level Exposure':
         return 'bg-purple-950/40 text-purple-300 border-purple-500/40';
       case 'Foundational Knowledge':
-        return 'bg-navy-800 text-slate-300 border-navy-700';
+        return 'bg-space-850 text-slate-300 border-space-700';
     }
   };
 
   return (
-    <section id="skills" className="py-20 relative bg-navy-950/40 border-t border-navy-800/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="skills" className="py-24 relative bg-space-950 border-t border-cyan-500/15">
+      <div className="absolute inset-0 tech-grid opacity-15 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         
         {/* Section Heading */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-accent-blue/10 border border-accent-blue/30 text-accent-cyan text-xs font-bold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono font-bold uppercase tracking-wider mb-3">
+              <Crosshair className="w-3.5 h-3.5 text-cyan-400" />
               <span>05 // Technical Competencies</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Technical Skills & Toolchain
+              Skills & Engineering Tools
             </h2>
             <p className="mt-3 text-slate-300 text-sm sm:text-base leading-relaxed">
-              Organized across 8 specialized domains with practical application context and transparent proficiency distinctions.
+              Organized into 5 professional robotics domains with verified practical use and transparent proficiency ratings.
             </p>
           </div>
 
-          {/* Search Bar */}
+          {/* Search Filter Input */}
           <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filter by skill, sensor, tool..."
-              className="w-full bg-navy-900 border border-navy-700 focus:border-accent-cyan/60 rounded-xl pl-9 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-colors"
+              placeholder="Search tools, hardware, sensors..."
+              className="w-full bg-space-900 border border-cyan-500/25 focus:border-cyan-400 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-colors font-mono"
             />
           </div>
         </div>
 
-        {/* 8 Categories Navigation Pills */}
-        <div className="flex flex-wrap gap-2 mb-8">
+        {/* 5 Professional Categories Filter Pills */}
+        <div className="flex flex-wrap gap-2 mb-10">
           <button
             onClick={() => setActiveCategory('all')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
               activeCategory === 'all'
-                ? 'bg-accent-blue text-white shadow-[0_0_12px_rgba(8,123,255,0.3)]'
-                : 'bg-navy-900/80 text-slate-300 hover:text-white border border-navy-800'
+                ? 'bg-gradient-to-r from-electric-500 to-cyan-500 text-white shadow-[0_0_15px_rgba(8,123,255,0.35)]'
+                : 'bg-space-900/80 text-slate-300 hover:text-white border border-space-800'
             }`}
           >
-            All Competencies ({skillsData.length})
+            All Tools ({skillsData.length})
           </button>
           {skillCategories.map((cat) => {
             const count = skillsData.filter(s => s.category === cat).length;
@@ -78,10 +81,10 @@ export const ModernSkills: React.FC = () => {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-accent-blue text-white shadow-[0_0_12px_rgba(8,123,255,0.3)]'
-                    : 'bg-navy-900/80 text-slate-300 hover:text-white border border-navy-800'
+                    ? 'bg-gradient-to-r from-electric-500 to-cyan-500 text-white shadow-[0_0_15px_rgba(8,123,255,0.35)]'
+                    : 'bg-space-900/80 text-slate-300 hover:text-white border border-space-800'
                 }`}
               >
                 {cat} ({count})
@@ -95,14 +98,14 @@ export const ModernSkills: React.FC = () => {
           {filteredSkills.map((skill, idx) => (
             <div
               key={idx}
-              className="rounded-xl bg-navy-900/60 border border-navy-800 hover:border-accent-cyan/40 p-5 transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,212,255,0.08)] flex flex-col justify-between"
+              className="hud-panel hud-corner rounded-2xl p-5 hover:border-cyan-400/50 transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between gap-2 mb-2.5">
-                  <span className="text-[10px] text-accent-cyan font-bold uppercase tracking-wider">
+                  <span className="text-[10px] text-cyan-400 font-mono font-bold uppercase tracking-wider">
                     {skill.category}
                   </span>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${getLevelBadgeClass(skill.level)}`}>
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold border ${getLevelBadgeClass(skill.level)}`}>
                     {skill.level}
                   </span>
                 </div>
@@ -116,7 +119,7 @@ export const ModernSkills: React.FC = () => {
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-navy-800/80 text-[11px] text-slate-400">
+              <div className="pt-3 border-t border-space-800 text-[11px] font-mono text-slate-400">
                 <span className="text-slate-500 font-medium">Applied In: </span>
                 <span className="text-slate-200">{skill.appliedIn}</span>
               </div>
@@ -125,11 +128,11 @@ export const ModernSkills: React.FC = () => {
         </div>
 
         {filteredSkills.length === 0 && (
-          <div className="text-center py-12 bg-navy-900/30 rounded-2xl border border-navy-800">
-            <p className="text-slate-400 text-sm">No skills found matching &quot;{searchQuery}&quot;.</p>
+          <div className="text-center py-12 bg-space-900/40 rounded-2xl border border-space-800">
+            <p className="text-slate-400 text-sm font-mono">No technical skills matching &quot;{searchQuery}&quot;.</p>
             <button
               onClick={() => { setSearchQuery(''); setActiveCategory('all'); }}
-              className="mt-3 px-4 py-1.5 rounded-lg text-xs font-semibold bg-accent-blue text-white"
+              className="mt-3 px-4 py-1.5 rounded-lg text-xs font-mono font-semibold bg-cyan-500 text-black cursor-pointer"
             >
               Reset Filters
             </button>
@@ -137,27 +140,27 @@ export const ModernSkills: React.FC = () => {
         )}
 
         {/* Transparency Legend */}
-        <div className="mt-10 p-5 rounded-2xl bg-navy-900/40 border border-navy-800">
-          <div className="text-xs font-bold text-white mb-2 flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-accent-cyan" />
-            <span>Honest Proficiency Classification</span>
+        <div className="mt-12 p-5 rounded-2xl bg-space-900/60 border border-space-800">
+          <div className="text-xs font-mono font-bold text-white mb-2.5 flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-cyan-400" />
+            <span>Honest Proficiency Distinctions (No Inflated Bars)</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs text-slate-300 pt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs text-slate-300 pt-1 font-mono">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-              <span><strong>Practical Proficiency:</strong> Direct hardware bench work & firmware building.</span>
+              <span><strong>Practical Proficiency:</strong> Hands-on prototype bench testing & firmware build.</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-accent-cyan" />
-              <span><strong>Industrial Training:</strong> Verified shop-floor experience at Arrow / XNG.</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400" />
+              <span><strong>Industrial Training:</strong> Verified factory internship at Arrow / XNG.</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-purple-400" />
-              <span><strong>Project Exposure:</strong> Prototyped within academic / hackathon systems.</span>
+              <span><strong>Project Exposure:</strong> Integrated in academic hardware prototypes.</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />
-              <span><strong>Foundational Knowledge:</strong> Structured engineering laboratory modules.</span>
+              <span><strong>Foundational Knowledge:</strong> Structured engineering lab coursework.</span>
             </div>
           </div>
         </div>
