@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, FileText, Bot, Compass } from 'lucide-react';
+import { Menu, X, FileText, Bot, Eye } from 'lucide-react';
 import { profileData } from '../../data/profile';
 
 interface ModernNavbarProps {
   activeSection: string;
   onNavigate: (sectionId: string) => void;
   onToggleAssistant: () => void;
+  onViewResume: () => void;
 }
 
 export const ModernNavbar: React.FC<ModernNavbarProps> = ({
   activeSection,
   onNavigate,
   onToggleAssistant,
+  onViewResume,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -32,7 +34,8 @@ export const ModernNavbar: React.FC<ModernNavbarProps> = ({
     { id: 'projects', label: 'Projects', code: '04' },
     { id: 'skills', label: 'Skills', code: '05' },
     { id: 'achievements', label: 'Achievements', code: '06' },
-    { id: 'contact', label: 'Contact', code: '07' },
+    { id: 'languages', label: 'Languages', code: '07' },
+    { id: 'contact', label: 'Contact', code: '08' },
   ];
 
   const handleNavClick = (id: string) => {
@@ -79,7 +82,7 @@ export const ModernNavbar: React.FC<ModernNavbarProps> = ({
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all relative cursor-pointer ${
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all relative cursor-pointer ${
                   isActive
                     ? 'text-white bg-neutral-900 border border-neutral-700'
                     : 'text-neutral-400 hover:text-white hover:bg-neutral-900/60'
@@ -113,16 +116,15 @@ export const ModernNavbar: React.FC<ModernNavbarProps> = ({
             <span className="hidden sm:inline">VENKY AI</span>
           </button>
 
-          {/* Resume Download CTA */}
-          <a
-            href={profileData.resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold text-black bg-white hover:bg-neutral-200 transition-all shadow-sm"
+          {/* View Resume CTA (Opens Viewer Modal with Download inside) */}
+          <button
+            onClick={onViewResume}
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold text-black bg-white hover:bg-neutral-200 transition-all shadow-sm cursor-pointer"
+            title="View Resume and Download"
           >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Resume</span>
-          </a>
+            <Eye className="w-3.5 h-3.5" />
+            <span>View Resume</span>
+          </button>
 
           {/* Mobile Menu Hamburger */}
           <button
@@ -169,14 +171,16 @@ export const ModernNavbar: React.FC<ModernNavbarProps> = ({
               <Bot className="w-3.5 h-3.5" />
               <span>VENKY AI</span>
             </button>
-            <a
-              href={profileData.resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 py-2 rounded-lg text-xs font-bold text-center text-black bg-white hover:bg-neutral-200 transition-colors"
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onViewResume();
+              }}
+              className="flex-1 py-2 rounded-lg text-xs font-bold text-center text-black bg-white hover:bg-neutral-200 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
             >
-              Resume PDF
-            </a>
+              <Eye className="w-3.5 h-3.5" />
+              <span>View Resume</span>
+            </button>
           </div>
         </div>
       )}

@@ -53,7 +53,8 @@ export const ModernFooter: React.FC<ModernFooterProps> = ({ onNavigate }) => {
                 { id: 'projects', label: '04 // Projects' },
                 { id: 'skills', label: '05 // Skills' },
                 { id: 'achievements', label: '06 // Achievements' },
-                { id: 'contact', label: '07 // Contact' },
+                { id: 'languages', label: '07 // Languages' },
+                { id: 'contact', label: '08 // Contact' },
               ].map((item) => (
                 <li key={item.id}>
                   <button

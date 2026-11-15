@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, ArrowRight, Mail, Phone, ExternalLink, Bot, Award, CheckCircle2, Globe } from 'lucide-react';
+import { FileText, ArrowRight, Mail, Phone, Bot, Award, CheckCircle2, Globe, Eye } from 'lucide-react';
 import { profileData } from '../data/profile';
 import { GithubIcon, LinkedinIcon } from '../components/ui/Icons';
 
@@ -7,12 +7,14 @@ interface ModernHeroProps {
   onExploreProjects: () => void;
   onContactMe: () => void;
   onOpenAssistant: () => void;
+  onViewResume: () => void;
 }
 
 export const ModernHero: React.FC<ModernHeroProps> = ({
   onExploreProjects,
   onContactMe,
   onOpenAssistant,
+  onViewResume,
 }) => {
   return (
     <section id="hero" className="relative min-h-[660px] lg:min-h-[720px] flex items-center pt-24 pb-16 overflow-hidden bg-black">
@@ -31,16 +33,20 @@ export const ModernHero: React.FC<ModernHeroProps> = ({
               <span>BE – ROBOTICS & AUTOMATION | INTERNSHIP APPLICANT</span>
             </div>
 
-            {/* Name & Academic Institution */}
-            <div className="space-y-1.5">
+            {/* Name & Personal Details Only (No College Name under Name) */}
+            <div className="space-y-2">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.1]">
                 {profileData.name}
               </h1>
-              <div className="text-lg sm:text-xl font-bold text-neutral-200 font-mono">
-                {profileData.college}
+              <div className="text-base sm:text-lg font-bold text-neutral-200 font-mono tracking-tight">
+                Robotics & Automation Engineer
               </div>
-              <div className="text-xs sm:text-sm text-neutral-400 font-mono">
-                {profileData.location} | {profileData.phone} | {profileData.email}
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-neutral-400 font-mono">
+                <span>{profileData.location}</span>
+                <span className="text-neutral-600">•</span>
+                <span>{profileData.phone}</span>
+                <span className="text-neutral-600">•</span>
+                <span>{profileData.email}</span>
               </div>
             </div>
 
@@ -58,21 +64,20 @@ export const ModernHero: React.FC<ModernHeroProps> = ({
             <div className="flex flex-wrap items-center gap-3 pt-1">
               <button
                 onClick={onExploreProjects}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-black bg-white hover:bg-neutral-200 transition-all cursor-pointer font-mono"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-black bg-white hover:bg-neutral-200 transition-all cursor-pointer font-mono shadow-sm"
               >
                 <span>View Projects</span>
                 <ArrowRight className="w-4 h-4 text-black" />
               </button>
 
-              <a
-                href={profileData.resumeUrl}
-                download="Venkatesh_CL_RESUME.pdf"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 hover:border-white transition-all font-mono"
+              {/* View Resume Button (Opens Modal with Download Inside) */}
+              <button
+                onClick={onViewResume}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 hover:border-white transition-all cursor-pointer font-mono"
               >
-                <FileText className="w-4 h-4 text-white" />
-                <span>Download Resume PDF</span>
-                <ExternalLink className="w-3.5 h-3.5 opacity-70" />
-              </a>
+                <Eye className="w-4 h-4 text-white" />
+                <span>View Resume</span>
+              </button>
 
               <button
                 onClick={onContactMe}
@@ -116,7 +121,7 @@ export const ModernHero: React.FC<ModernHeroProps> = ({
             </div>
           </div>
 
-          {/* Right Column: Academic & Internship Overview Card */}
+          {/* Right Column: Academic & Credential Overview (Clearly defined one by one, no boxes) */}
           <div className="lg:col-span-5 space-y-4">
             <div className="hud-panel hud-corner rounded-3xl p-6 relative border border-neutral-800 bg-neutral-950">
               <div className="flex items-center justify-between pb-3 border-b border-neutral-800 font-mono text-xs">
@@ -124,44 +129,64 @@ export const ModernHero: React.FC<ModernHeroProps> = ({
                   <span className="w-2 h-2 rounded-full bg-white" />
                   ACADEMIC & CREDENTIAL PROFILE
                 </span>
-                <span className="text-neutral-400 text-[10px]">RRCE • VTU</span>
+                <span className="text-neutral-400 text-[10px]">VERIFIED</span>
               </div>
 
               {/* Award Callout */}
-              <div className="my-4 p-3 rounded-2xl bg-neutral-900 border border-neutral-700 flex items-start gap-3">
+              <div className="my-4 p-3 rounded-2xl bg-neutral-900 border border-neutral-800 flex items-start gap-3">
                 <Award className="w-5 h-5 text-white shrink-0 mt-0.5" />
                 <div className="text-xs">
                   <div className="font-bold text-white">First Prize – Innovex 2026 (3 Nov 2026)</div>
-                  <div className="text-neutral-300 text-[11px] mt-0.5">
+                  <div className="text-neutral-400 text-[11px] mt-0.5">
                     College-Level Project Exhibition, Rajarajeswari College of Engineering.
                   </div>
                 </div>
               </div>
 
-              {/* Verified Scores Grid */}
-              <div className="grid grid-cols-2 gap-2.5 text-xs font-mono">
-                <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800">
-                  <div className="text-neutral-400 text-[10px]">B.E. ROBOTICS & AUTO.</div>
-                  <div className="text-xl font-black text-white mt-0.5">CGPA 7.8</div>
-                  <div className="text-[10px] text-neutral-300 mt-0.5">Pursuing</div>
+              {/* Clearly Defined One by One (No 2x2 grid boxes) */}
+              <div className="space-y-2.5 text-xs font-mono">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-900/60 border border-neutral-850">
+                  <div>
+                    <div className="text-white font-bold">B.E. – Robotics & Automation</div>
+                    <div className="text-[10px] text-neutral-400">Rajarajeswari College of Engineering • Pursuing</div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-neutral-400 block uppercase">CGPA</span>
+                    <span className="text-sm font-black text-white">7.8</span>
+                  </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800">
-                  <div className="text-neutral-400 text-[10px]">DIPLOMA IN EEE</div>
-                  <div className="text-xl font-black text-white mt-0.5">75.40%</div>
-                  <div className="text-[10px] text-neutral-300 mt-0.5">CGPA 8.29 • Completed</div>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-900/60 border border-neutral-850">
+                  <div>
+                    <div className="text-white font-bold">Diploma – Electrical & Electronics</div>
+                    <div className="text-[10px] text-neutral-400">MEI Polytechnic • Completed</div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-neutral-400 block uppercase">Score / CGPA</span>
+                    <span className="text-sm font-black text-white">75.40% | 8.29</span>
+                  </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800">
-                  <div className="text-neutral-400 text-[10px]">SSLC</div>
-                  <div className="text-xl font-black text-white mt-0.5">70.8%</div>
-                  <div className="text-[10px] text-neutral-400 mt-0.5">Completed</div>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-900/60 border border-neutral-850">
+                  <div>
+                    <div className="text-white font-bold">SSLC</div>
+                    <div className="text-[10px] text-neutral-400">Karnataka Secondary Education Board • Completed</div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-neutral-400 block uppercase">Percentage</span>
+                    <span className="text-sm font-black text-white">70.8%</span>
+                  </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-neutral-900 border border-neutral-800">
-                  <div className="text-neutral-400 text-[10px]">INTERNSHIPS</div>
-                  <div className="text-base font-bold text-white mt-0.5">Arrow & XNG</div>
-                  <div className="text-[10px] text-neutral-400 mt-0.5">4 Months + 3 Months</div>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-900/60 border border-neutral-850">
+                  <div>
+                    <div className="text-white font-bold">Internships</div>
+                    <div className="text-[10px] text-neutral-400">Arrow Automation & XNG Automation</div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-neutral-400 block uppercase">Duration</span>
+                    <span className="text-xs font-bold text-white">4 Mos + 3 Mos</span>
+                  </div>
                 </div>
               </div>
 

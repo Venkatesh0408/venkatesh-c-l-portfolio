@@ -8,9 +8,11 @@ import { ModernExperience } from './sections/ModernExperience';
 import { ModernProjects } from './sections/ModernProjects';
 import { ModernSkills } from './sections/ModernSkills';
 import { ModernAchievements } from './sections/ModernAchievements';
+import { ModernLanguages } from './sections/ModernLanguages';
 import { ModernContact } from './sections/ModernContact';
 import { VenkyAssistant } from './components/assistant/VenkyAssistant';
 import { ProjectModal } from './components/project/ProjectModal';
+import { ResumeViewerModal } from './components/resume/ResumeViewerModal';
 import { projectsData } from './data/projects';
 import { Bot, AlertTriangle } from 'lucide-react';
 
@@ -37,13 +39,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-space-950 text-white flex items-center justify-center p-6 font-mono">
-          <div className="max-w-md w-full bg-space-900 border border-red-500/50 rounded-2xl p-6 space-y-4 shadow-2xl">
-            <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
-              <AlertTriangle className="w-5 h-5 text-red-400" />
+        <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 font-mono">
+          <div className="max-w-md w-full bg-neutral-900 border border-neutral-700 rounded-2xl p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center gap-2 text-white font-bold text-sm">
+              <AlertTriangle className="w-5 h-5 text-white" />
               <span>SYSTEM RECOVERY // EXCEPTION_CAUGHT</span>
             </div>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-neutral-300">
               {this.state.error?.message || 'An unexpected runtime anomaly occurred.'}
             </p>
             <button
@@ -51,7 +53,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
                 sessionStorage.clear();
                 window.location.reload();
               }}
-              className="px-4 py-2 bg-cyan-500 text-black font-bold text-xs rounded-xl transition-all hover:bg-white cursor-pointer"
+              className="px-4 py-2 bg-white text-black font-bold text-xs rounded-xl transition-all hover:bg-neutral-200 cursor-pointer"
             >
               Reboot Command Center
             </button>
@@ -66,6 +68,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 export function AppContent() {
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+  const [isResumeViewerOpen, setIsResumeViewerOpen] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   // Hash navigation on mount
@@ -81,8 +84,9 @@ export function AppContent() {
       }
     }
   }, []);
+
   useEffect(() => {
-    const sectionIds = ['hero', 'about', 'education', 'experience', 'projects', 'skills', 'achievements', 'contact'];
+    const sectionIds = ['hero', 'about', 'education', 'experience', 'projects', 'skills', 'achievements', 'languages', 'contact'];
 
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 250;
@@ -117,6 +121,7 @@ export function AppContent() {
         activeSection={activeSection}
         onNavigate={scrollToSection}
         onToggleAssistant={() => setIsAssistantOpen(!isAssistantOpen)}
+        onViewResume={() => setIsResumeViewerOpen(true)}
       />
 
       {/* 2. Main Single-Page Sections */}
@@ -125,6 +130,7 @@ export function AppContent() {
           onExploreProjects={() => scrollToSection('projects')}
           onContactMe={() => scrollToSection('contact')}
           onOpenAssistant={() => setIsAssistantOpen(true)}
+          onViewResume={() => setIsResumeViewerOpen(true)}
         />
 
         <ModernAbout />
@@ -140,6 +146,9 @@ export function AppContent() {
         <ModernSkills />
 
         <ModernAchievements />
+
+        {/* Languages section placed in last after workshops and activities */}
+        <ModernLanguages />
 
         <ModernContact
           onOpenAssistant={() => setIsAssistantOpen(true)}
@@ -186,6 +195,12 @@ export function AppContent() {
       <ProjectModal
         project={activeProject}
         onClose={() => setSelectedProjectId(null)}
+      />
+
+      {/* 7. Resume Viewer Modal with Download Button Inside */}
+      <ResumeViewerModal
+        isOpen={isResumeViewerOpen}
+        onClose={() => setIsResumeViewerOpen(false)}
       />
     </div>
   );

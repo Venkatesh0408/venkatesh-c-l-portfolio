@@ -32,7 +32,7 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant })
         {/* Section Heading */}
         <div className="max-w-3xl mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-neutral-900 border border-neutral-700 text-white text-xs font-mono font-bold uppercase tracking-wider mb-3">
-            <span>07 // Contact & Inquiries</span>
+            <span>08 // Contact & Inquiries</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Contact Venkatesh C L

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Target, Globe, CheckCircle2 } from 'lucide-react';
+import { Target, CheckCircle2, Compass } from 'lucide-react';
 import { profileData } from '../data/profile';
 
 export const ModernAbout: React.FC = () => {
@@ -22,77 +22,50 @@ export const ModernAbout: React.FC = () => {
           </p>
         </div>
 
-        {/* Two-Column Grid: Career Objective & Languages */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-10">
-          
-          {/* Career Objective Card */}
-          <div className="lg:col-span-7 hud-panel hud-corner rounded-3xl p-7 space-y-4 bg-neutral-950 border border-neutral-800">
-            <div className="flex items-center gap-2 text-xs font-mono text-white font-bold uppercase tracking-wider pb-2 border-b border-neutral-800">
-              <Target className="w-4 h-4 text-white" />
-              <span>CAREER OBJECTIVE</span>
-            </div>
-            
-            <blockquote className="text-neutral-200 text-sm sm:text-base leading-relaxed italic border-l-2 border-white pl-4 py-1">
-              &ldquo;{profileData.careerObjective}&rdquo;
-            </blockquote>
-
-            <div className="pt-3 border-t border-neutral-850 space-y-2 text-xs font-mono text-neutral-300">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-white" />
-                <span>Hands-on engineering, sensor integration, microcontroller-based systems.</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-white" />
-                <span>Prototyping, testing, and willingness to contribute to practical engineering projects.</span>
-              </div>
-            </div>
+        {/* Career Objective Full Width */}
+        <div className="hud-panel hud-corner rounded-3xl p-7 sm:p-9 space-y-5 bg-neutral-950 border border-neutral-800 mb-8">
+          <div className="flex items-center gap-2 text-xs font-mono text-white font-bold uppercase tracking-wider pb-3 border-b border-neutral-800">
+            <Target className="w-4 h-4 text-white" />
+            <span>CAREER OBJECTIVE</span>
           </div>
+          
+          <blockquote className="text-neutral-200 text-base sm:text-lg leading-relaxed italic border-l-2 border-white pl-4 py-1">
+            &ldquo;{profileData.careerObjective}&rdquo;
+          </blockquote>
 
-          {/* Languages & Quick Facts Card */}
-          <div className="lg:col-span-5 hud-panel hud-corner rounded-3xl p-7 space-y-5 bg-neutral-950 border border-neutral-800">
-            <div className="flex items-center gap-2 text-xs font-mono text-white font-bold uppercase tracking-wider pb-2 border-b border-neutral-800">
-              <Globe className="w-4 h-4 text-white" />
-              <span>LANGUAGES</span>
+          <div className="pt-4 border-t border-neutral-850 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono text-neutral-300">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
+              <span>Hands-on engineering, sensor integration, microcontroller-based systems.</span>
             </div>
-
-            <div className="space-y-2.5">
-              {profileData.languages.map((lang, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between p-3 rounded-xl bg-neutral-900 border border-neutral-800 text-xs font-mono"
-                >
-                  <span className="font-bold text-white">{lang.language}</span>
-                  <span className="px-2.5 py-0.5 rounded text-[11px] bg-neutral-800 text-neutral-200 border border-neutral-700 font-semibold">
-                    {lang.proficiency}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div className="pt-3 border-t border-neutral-850 text-xs font-mono text-neutral-400">
-              <span>Location: </span>
-              <strong className="text-white">{profileData.location}</strong>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
+              <span>Prototyping, testing, and willingness to contribute to practical engineering projects.</span>
             </div>
           </div>
         </div>
 
         {/* Areas of Interest Grid */}
-        <div className="hud-panel hud-corner rounded-3xl p-7 space-y-4 bg-neutral-950 border border-neutral-800">
+        <div className="hud-panel hud-corner rounded-3xl p-7 sm:p-9 space-y-5 bg-neutral-950 border border-neutral-800">
           <div className="flex items-center justify-between pb-3 border-b border-neutral-800 font-mono text-xs">
-            <span className="text-white font-bold uppercase tracking-wider">
-              AREAS OF INTEREST
-            </span>
+            <div className="flex items-center gap-2">
+              <Compass className="w-4 h-4 text-white" />
+              <span className="text-white font-bold uppercase tracking-wider">
+                AREAS OF INTEREST
+              </span>
+            </div>
             <span className="text-neutral-400">8 KEY DISCIPLINES</span>
           </div>
 
-          <div className="flex flex-wrap gap-2.5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {profileData.areasOfInterest.map((interest, idx) => (
-              <span
+              <div
                 key={idx}
-                className="px-4 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-white font-mono text-xs hover:border-white transition-colors"
+                className="px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-800 text-white font-mono text-xs hover:border-white transition-colors flex items-center gap-2"
               >
-                {interest}
-              </span>
+                <span className="text-neutral-500 font-bold">•</span>
+                <span>{interest}</span>
+              </div>
             ))}
           </div>
         </div>
