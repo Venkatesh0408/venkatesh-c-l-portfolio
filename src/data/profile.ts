@@ -1,23 +1,26 @@
 export interface Profile {
   name: string;
   degree: string;
+  applicantRole: string;
   college: string;
   role: string;
-  introduction: string;
-  tagline: string;
+  careerObjective: string;
   location: string;
   phone: string;
   email: string;
+  whatsapp?: string;
   linkedin: string;
   github: string;
-  whatsapp: string;
+  portfolio: string;
+  projectDemo: string;
   resumeUrl: string;
-  gpsCoordinates?: string;
-  focus?: string[];
-  status?: string;
+  languages: { language: string; proficiency: string }[];
+  areasOfInterest: string[];
   stats: {
     cgpaBe: string;
     diplomaScore: string;
+    diplomaCgpa: string;
+    sslcScore: string;
     internshipDuration: string;
     projectsCount: string;
   };
@@ -25,25 +28,41 @@ export interface Profile {
 
 export const profileData: Profile = {
   name: "VENKATESH C L",
-  degree: "B.E. – Robotics and Automation",
-  college: "Rajarajeswari College of Engineering, Bengaluru",
+  degree: "B.E. – Robotics & Automation",
+  applicantRole: "BE – Robotics & Automation | Internship Applicant",
+  college: "Rajarajeswari College of Engineering, Bengaluru (Autonomous; affiliated to VTU)",
   role: "ROBOTICS & AUTOMATION ENGINEER",
-  introduction: "Designing intelligent robotic systems and automation solutions that connect engineering with real-world applications.",
-  tagline: "Bridging autonomous robotics, embedded firmware, industrial PLC systems, and precision hardware integration.",
-  location: "Bengaluru, Karnataka, India",
-  gpsCoordinates: "12.9716° N, 77.5946° E (Bengaluru)",
-  focus: ["Autonomous Robotics", "Embedded Systems", "Industrial Automation", "CAD & Watertight Design"],
-  status: "SYSTEMS ACTIVE // READY FOR ISRO & ROBOTICS LABS",
-  phone: "+91 8147134789",
+  careerObjective: "Robotics and Automation engineering student seeking an internship in robotics, embedded systems, industrial automation or product development. Interested in hands-on engineering, sensor integration, microcontroller-based systems, prototyping and testing, with a willingness to learn and contribute to practical engineering projects.",
+  location: "Bengaluru, Karnataka",
+  phone: "8147134789",
   email: "venkateshcl0408@gmail.com",
+  whatsapp: "https://wa.me/918147134789",
   linkedin: "https://linkedin.com/in/venkatesh-venky-a63639313",
   github: "https://github.com/Venkatesh0408",
-  whatsapp: "https://wa.me/918147134789",
+  portfolio: "https://venkateshcl-portfolio.vercel.app",
+  projectDemo: "https://submersible-micro-robot.onrender.com",
   resumeUrl: "/assets/Venkatesh_CL_RESUME.pdf",
+  languages: [
+    { language: "Kannada", proficiency: "Advanced" },
+    { language: "Hindi", proficiency: "Intermediate" },
+    { language: "English", proficiency: "Intermediate" }
+  ],
+  areasOfInterest: [
+    "Robotics",
+    "Embedded Systems",
+    "Industrial Automation",
+    "Electrical Automation",
+    "Electronics Engineering",
+    "Additive Manufacturing / 3D Printing",
+    "Aerospace Engineering",
+    "Machine Vision"
+  ],
   stats: {
     cgpaBe: "7.8",
     diplomaScore: "75.40%",
-    internshipDuration: "8 Mos",
+    diplomaCgpa: "8.29",
+    sslcScore: "70.8%",
+    internshipDuration: "8 Months Total",
     projectsCount: "4"
   }
 };
