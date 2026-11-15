@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Phone, MapPin, ArrowUp, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, MapPin, ArrowUp, ShieldCheck } from 'lucide-react';
 import { profileData } from '../../data/profile';
 import { GithubIcon, LinkedinIcon } from '../ui/Icons';
 
@@ -13,7 +13,7 @@ export const ModernFooter: React.FC<ModernFooterProps> = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="bg-space-950 border-t border-cyan-500/20 text-slate-400 text-xs py-14 relative">
+    <footer className="bg-black border-t border-neutral-800 text-neutral-400 text-xs py-14 relative">
       <div className="absolute inset-0 tech-grid opacity-10 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -24,16 +24,16 @@ export const ModernFooter: React.FC<ModernFooterProps> = ({ onNavigate }) => {
               <span className="text-white font-black text-lg tracking-tight">
                 {profileData.name}
               </span>
-              <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+              <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-neutral-900 text-white border border-neutral-700">
                 ROBOTICS & AUTOMATION
               </span>
             </div>
-            <p className="text-slate-400 text-xs leading-relaxed max-w-md">
+            <p className="text-neutral-400 text-xs leading-relaxed max-w-md">
               B.E. in Robotics and Automation from Rajarajeswari College of Engineering, Bengaluru.
               Focused on autonomous underwater vehicles, embedded firmware, industrial electrical cabinets, and sensor calibration.
             </p>
-            <div className="flex items-center gap-2 text-emerald-400 text-xs font-mono font-medium pt-1">
-              <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-400" />
+            <div className="flex items-center gap-2 text-neutral-300 text-xs font-mono font-medium pt-1">
+              <ShieldCheck className="w-4 h-4 shrink-0 text-white" />
               <span>Verified academic & industrial records (1st Prize Innovex 2026)</span>
             </div>
           </div>
@@ -41,7 +41,7 @@ export const ModernFooter: React.FC<ModernFooterProps> = ({ onNavigate }) => {
           {/* Quick links */}
           <div>
             <h4 className="text-white font-mono font-bold text-xs uppercase tracking-wider mb-3.5 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              <span className="w-1.5 h-1.5 rounded-full bg-white" />
               PORTFOLIO_INDEX
             </h4>
             <ul className="space-y-2 font-mono text-xs">
@@ -58,7 +58,7 @@ export const ModernFooter: React.FC<ModernFooterProps> = ({ onNavigate }) => {
                 <li key={item.id}>
                   <button
                     onClick={() => onNavigate(item.id)}
-                    className="hover:text-cyan-400 transition-colors text-left cursor-pointer"
+                    className="hover:text-white transition-colors text-left cursor-pointer"
                   >
                     {item.label}
                   </button>
@@ -70,24 +70,24 @@ export const ModernFooter: React.FC<ModernFooterProps> = ({ onNavigate }) => {
           {/* Direct channels */}
           <div>
             <h4 className="text-white font-mono font-bold text-xs uppercase tracking-wider mb-3.5 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              <span className="w-1.5 h-1.5 rounded-full bg-white" />
               DIRECT_UPLINK
             </h4>
             <ul className="space-y-2.5 font-mono text-xs">
               <li className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                <Mail className="w-3.5 h-3.5 text-white shrink-0" />
                 <a href={`mailto:${profileData.email}`} className="hover:text-white transition-colors truncate">
                   {profileData.email}
                 </a>
               </li>
               <li className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                <Phone className="w-3.5 h-3.5 text-white shrink-0" />
                 <a href={`tel:${profileData.phone}`} className="hover:text-white transition-colors">
                   {profileData.phone}
                 </a>
               </li>
               <li className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                <MapPin className="w-3.5 h-3.5 text-white shrink-0" />
                 <span>{profileData.location}</span>
               </li>
             </ul>
@@ -97,7 +97,7 @@ export const ModernFooter: React.FC<ModernFooterProps> = ({ onNavigate }) => {
                 href={profileData.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-space-900 border border-space-700 flex items-center justify-center text-slate-300 hover:text-white hover:border-cyan-400/50 hover:bg-space-850 transition-all"
+                className="w-8 h-8 rounded-lg bg-neutral-900 border border-neutral-800 flex items-center justify-center text-neutral-300 hover:text-white hover:border-white transition-all"
                 title="GitHub Profile"
               >
                 <GithubIcon className="w-4 h-4" />
@@ -106,35 +106,38 @@ export const ModernFooter: React.FC<ModernFooterProps> = ({ onNavigate }) => {
                 href={profileData.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-space-900 border border-space-700 flex items-center justify-center text-slate-300 hover:text-white hover:border-cyan-400/50 hover:bg-space-850 transition-all"
+                className="w-8 h-8 rounded-lg bg-neutral-900 border border-neutral-800 flex items-center justify-center text-neutral-300 hover:text-white hover:border-white transition-all"
                 title="LinkedIn Profile"
               >
                 <LinkedinIcon className="w-4 h-4" />
               </a>
-              <a
-                href={profileData.whatsapp}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-space-900 border border-space-700 flex items-center justify-center text-slate-300 hover:text-emerald-400 hover:border-emerald-500/50 hover:bg-space-850 transition-all"
-                title="WhatsApp Chat"
-              >
-                <span className="text-[10px] font-bold font-mono">WA</span>
-              </a>
+              {profileData.whatsapp && (
+                <a
+                  href={profileData.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-lg bg-neutral-900 border border-neutral-800 flex items-center justify-center text-neutral-300 hover:text-white hover:border-white transition-all"
+                  title="WhatsApp Chat"
+                >
+                  <span className="text-[10px] font-bold font-mono">WA</span>
+                </a>
+              )}
             </div>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t border-space-800 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px]">
-          <p className="text-slate-500 text-center sm:text-left">
-            © {new Date().getFullYear()} {profileData.name} • Futuristic Robotics Engineer Portfolio. Designed for ISRO, Robotics R&D, and Industrial Automation.
+        <div className="pt-8 border-t border-neutral-900 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px]">
+          <p className="text-neutral-500 text-center sm:text-left">
+            © {new Date().getFullYear()} {profileData.name} • Robotics & Automation Engineer Portfolio.
           </p>
+
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-space-900 hover:bg-space-850 border border-space-700 text-slate-300 hover:text-white font-medium transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 text-neutral-400 hover:text-white transition-colors cursor-pointer"
           >
             <span>Back to top</span>
-            <ArrowUp className="w-3.5 h-3.5 text-cyan-400" />
+            <ArrowUp className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>

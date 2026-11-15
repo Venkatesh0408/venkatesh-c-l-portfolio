@@ -111,7 +111,7 @@ export function AppContent() {
   const activeProject = projectsData.find(p => p.id === selectedProjectId) || null;
 
   return (
-    <div className="min-h-screen bg-space-950 text-slate-100 selection:bg-cyan-500 selection:text-black relative font-sans">
+    <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black relative font-sans">
       {/* 1. Futuristic Glassmorphic Navigation Header */}
       <ModernNavbar
         activeSection={activeSection}
@@ -153,16 +153,16 @@ export function AppContent() {
       <div className="fixed bottom-6 right-6 z-40">
         <button
           onClick={() => setIsAssistantOpen(!isAssistantOpen)}
-          className={`px-4 py-3 rounded-full border shadow-[0_4px_30px_rgba(0,212,255,0.4)] flex items-center gap-2.5 font-bold text-xs select-none transition-all duration-300 transform hover:scale-105 cursor-pointer font-mono ${
+          className={`px-4 py-3 rounded-full border shadow-[0_4px_25px_rgba(255,255,255,0.15)] flex items-center gap-2.5 font-bold text-xs select-none transition-all duration-300 transform hover:scale-105 cursor-pointer font-mono ${
             isAssistantOpen
-              ? 'bg-space-900 text-white border-cyan-400'
-              : 'bg-gradient-to-r from-electric-500 to-cyan-500 text-white border-cyan-400/40'
+              ? 'bg-neutral-900 text-white border-white'
+              : 'bg-white text-black border-white hover:bg-neutral-200'
           }`}
           title="Open VENKY AI Assistant"
         >
-          <Bot className="w-4 h-4 text-white" />
+          <Bot className="w-4 h-4" />
           <span>Ask VENKY AI</span>
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#10B981]" />
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
         </button>
       </div>
 

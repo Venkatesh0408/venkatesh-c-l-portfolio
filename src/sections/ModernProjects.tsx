@@ -1,211 +1,123 @@
-import React, { useState } from 'react';
-import { ExternalLink, Award, AlertTriangle, Layers, ChevronRight, Globe } from 'lucide-react';
+import React from 'react';
+import { ExternalLink, Award, AlertTriangle, ArrowUpRight } from 'lucide-react';
 import { projectsData } from '../data/projects';
 import { GithubIcon } from '../components/ui/Icons';
 
 interface ModernProjectsProps {
-  onOpenProjectModal: (projectId: string) => void;
+  onOpenProjectModal?: (projectId: string) => void;
 }
 
-export const ModernProjects: React.FC<ModernProjectsProps> = ({ onOpenProjectModal }) => {
-  const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
-
-  const flagshipProject = projectsData[0];
-  const secondaryProjects = projectsData.slice(1);
-
+export const ModernProjects: React.FC<ModernProjectsProps> = () => {
   return (
-    <section id="projects" className="py-20 relative bg-space-950 border-t border-cyan-500/15">
-      <div className="absolute inset-0 tech-grid opacity-15 pointer-events-none" />
+    <section id="projects" className="py-20 relative bg-black border-t border-neutral-800">
+      <div className="absolute inset-0 tech-grid opacity-10 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         
         {/* Section Heading */}
         <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono font-bold uppercase tracking-wider mb-3">
-            <span>04 // Projects (From Resume)</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-neutral-900 border border-neutral-700 text-white text-xs font-mono font-bold uppercase tracking-wider mb-3">
+            <span>04 // Projects</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Engineering Projects
+            Projects
           </h2>
-          <p className="mt-2 text-slate-300 text-sm sm:text-base leading-relaxed">
-            The four engineering projects exactly as documented on Page 2 of the uploaded resume.
+          <p className="mt-2 text-neutral-400 text-sm sm:text-base leading-relaxed">
+            Engineering projects developed across robotics, embedded systems, industrial automation, and software.
           </p>
         </div>
 
-        {/* FLAGSHIP SHOWCASE: Submersible Micro Robot */}
-        <div className="mb-14">
-          <div className="hud-panel hud-corner rounded-3xl p-6 sm:p-9 border-2 border-cyan-400/40 shadow-[0_0_45px_rgba(0,212,255,0.15)]">
-            
-            {/* Top Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-cyan-500/20 font-mono text-xs">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-1 rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1.5">
-                  <Award className="w-4 h-4 text-amber-400" />
-                  <span>FIRST PRIZE // INNOVEX 2026 (3 NOV 2026)</span>
-                </span>
-                <span className="px-3 py-1 rounded-full font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
-                  FLAGSHIP PROJECT
-                </span>
-              </div>
+        {/* Projects List - Clean, compact, no image space or blank areas */}
+        <div className="space-y-8">
+          {projectsData.map((project) => {
+            const isFlagship = project.id === 'submersible-micro-robot';
 
-              {/* Verified Links from Resume */}
-              <div className="flex items-center gap-2">
-                <a
-                  href={flagshipProject.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3 py-1.5 rounded-lg bg-space-900 border border-space-700 hover:border-cyan-400 text-slate-300 hover:text-white flex items-center gap-1.5 transition-all text-xs"
-                >
-                  <GithubIcon className="w-3.5 h-3.5" />
-                  <span>GitHub Repository</span>
-                </a>
-                <a
-                  href={flagshipProject.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-electric-500 to-cyan-500 text-white font-bold flex items-center gap-1.5 transition-all text-xs shadow-md"
-                >
-                  <Globe className="w-3.5 h-3.5" />
-                  <span>Project Demo</span>
-                </a>
-              </div>
-            </div>
+            return (
+              <div
+                key={project.id}
+                className={`rounded-2xl bg-neutral-950 border p-6 sm:p-8 transition-all duration-200 relative ${
+                  isFlagship
+                    ? 'border-neutral-700 hover:border-white shadow-[0_4px_30px_rgba(255,255,255,0.05)]'
+                    : 'border-neutral-850 hover:border-neutral-600'
+                }`}
+              >
+                {/* Header: Title, Category, and Action URLs */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-neutral-800">
+                  <div className="space-y-1.5">
+                    <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+                      <span className="px-2.5 py-0.5 rounded bg-neutral-900 text-neutral-300 border border-neutral-700 font-medium">
+                        {project.category}
+                      </span>
+                      {isFlagship && (
+                        <span className="px-2.5 py-0.5 rounded bg-white text-black font-bold flex items-center gap-1">
+                          <Award className="w-3.5 h-3.5" />
+                          <span>1st Prize Winner • Innovex 2026</span>
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                      {project.title}
+                    </h3>
+                  </div>
 
-            {/* Title */}
-            <div className="mt-5 space-y-1">
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                {flagshipProject.title}
-              </h3>
-            </div>
-
-            {/* Grid: Imagery & Exact Resume Bullets */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6 items-start">
-              
-              {/* Left Column: Real Test Images */}
-              <div className="lg:col-span-6 space-y-3">
-                <div className="relative h-64 sm:h-76 rounded-2xl bg-space-900 border border-cyan-500/30 overflow-hidden flex items-center justify-center">
-                  <img
-                    src={flagshipProject.images[activeImageIndex]?.url || flagshipProject.images[0].url}
-                    alt={flagshipProject.images[activeImageIndex]?.caption || "Submersible Micro Robot test"}
-                    className="w-full h-full object-contain p-2"
-                  />
-                  <div className="absolute bottom-2 left-2 right-2 p-2 rounded-xl bg-space-950/90 border border-cyan-500/30 text-xs font-mono text-cyan-300 flex items-center justify-between">
-                    <span className="truncate">{flagshipProject.images[activeImageIndex]?.caption}</span>
-                    <span className="text-[10px] text-slate-400">{activeImageIndex + 1}/{flagshipProject.images.length}</span>
+                  {/* Project URLs */}
+                  <div className="flex flex-wrap items-center gap-2.5 shrink-0 font-mono text-xs">
+                    {project.demoUrl && (
+                      <a
+                        href={project.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white text-black font-bold hover:bg-neutral-200 transition-colors shadow-sm"
+                        title="Open live project deployment"
+                      >
+                        <span>Live Demo</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                    {project.githubUrl && (
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-neutral-900 border border-neutral-700 text-neutral-200 hover:text-white hover:border-white transition-colors"
+                        title="View GitHub repository"
+                      >
+                        <GithubIcon className="w-3.5 h-3.5" />
+                        <span>GitHub</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-neutral-400" />
+                      </a>
+                    )}
                   </div>
                 </div>
 
-                {/* Thumbnails */}
-                <div className="grid grid-cols-3 gap-2">
-                  {flagshipProject.images.map((img, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveImageIndex(idx)}
-                      className={`h-16 rounded-xl overflow-hidden bg-space-900 border transition-all cursor-pointer ${
-                        activeImageIndex === idx
-                          ? 'border-cyan-400 ring-1 ring-cyan-400'
-                          : 'border-space-800 opacity-60 hover:opacity-100'
-                      }`}
-                    >
-                      <img src={img.url} alt={img.caption} className="w-full h-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-
-                {/* Verified pH Boundary Notice - Exact from Resume */}
-                <div className="p-3.5 rounded-2xl bg-amber-950/25 border border-amber-500/40 text-amber-200 text-xs font-mono space-y-1">
-                  <div className="flex items-center gap-1.5 text-amber-400 font-bold">
-                    <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
-                    <span>EXACT RESUME NOTE:</span>
-                  </div>
-                  <p className="leading-relaxed">
-                    &ldquo;Camera-based visual assessment is distinguished from measured pH; the project does not use a pH sensor.&rdquo;
-                  </p>
-                </div>
-              </div>
-
-              {/* Right Column: Exact Resume Bullets */}
-              <div className="lg:col-span-6 space-y-4">
-                <div className="p-6 rounded-2xl bg-space-900/80 border border-space-800 space-y-3">
-                  <div className="text-xs font-mono text-cyan-400 font-bold uppercase tracking-wider pb-2 border-b border-cyan-500/20">
-                    PROJECT DETAILS (EXACTLY AS SUBMITTED IN RESUME):
-                  </div>
-                  <ul className="space-y-3 text-xs sm:text-sm text-slate-200">
-                    {flagshipProject.points.map((point, pIdx) => (
-                      <li key={pIdx} className="flex items-start gap-2.5">
-                        <span className="text-cyan-400 font-bold font-mono mt-0.5">•</span>
-                        <span className="leading-relaxed">{point}</span>
+                {/* Brief Explanation in Points */}
+                <div className="mt-5 space-y-3">
+                  <span className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-400 block">
+                    Technical Overview & Implementation:
+                  </span>
+                  <ul className="space-y-2 text-sm text-neutral-300">
+                    {project.points.map((point, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5 leading-relaxed">
+                        <span className="text-white font-bold font-mono mt-0.5 shrink-0">•</span>
+                        <span>{point}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="pt-2 flex justify-end">
-                  <button
-                    onClick={() => onOpenProjectModal(flagshipProject.id)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-mono font-bold text-cyan-400 hover:text-white bg-space-900 border border-cyan-500/30 hover:border-cyan-400 transition-all cursor-pointer"
-                  >
-                    <span>View Technical Dossier</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-
-        {/* 3 SECONDARY PROJECTS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {secondaryProjects.map((project) => (
-            <div
-              key={project.id}
-              className="hud-panel hud-corner rounded-3xl p-6 sm:p-7 flex flex-col justify-between hover:border-cyan-400/50 transition-all duration-300"
-            >
-              <div>
-                {/* Image preview if exists */}
-                {project.images.length > 0 ? (
-                  <div className="h-44 rounded-2xl bg-space-900 border border-space-800 overflow-hidden mb-4 flex items-center justify-center">
-                    <img
-                      src={project.images[0].url}
-                      alt={project.images[0].caption}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="h-28 rounded-2xl bg-space-900 border border-space-800 mb-4 flex items-center justify-center text-xs font-mono text-slate-400">
-                    <span>DIGITAL ASSISTANT CONCEPT</span>
+                {/* Verified Technical Boundary Note */}
+                {project.verifiedNote && (
+                  <div className="mt-5 p-3.5 rounded-xl bg-neutral-900 border border-neutral-700 text-xs font-mono text-neutral-300 flex items-start gap-2.5">
+                    <AlertTriangle className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                    <div className="space-y-0.5">
+                      <span className="font-bold text-white uppercase tracking-wider">Technical Note:</span>
+                      <p className="text-neutral-300 leading-relaxed">{project.verifiedNote}</p>
+                    </div>
                   </div>
                 )}
-
-                <h4 className="text-lg font-bold text-white tracking-tight">
-                  {project.title}
-                </h4>
-
-                {/* Bullets directly from resume */}
-                <ul className="mt-4 space-y-2 text-xs text-slate-300">
-                  {project.points.map((pt, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <span className="text-cyan-400 font-bold font-mono mt-0.5">•</span>
-                      <span className="leading-relaxed">{pt}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
-
-              <div className="mt-6 pt-3 border-t border-space-800 flex items-center justify-between">
-                <span className="text-[11px] font-mono text-slate-400">From Page 2 Resume</span>
-                <button
-                  onClick={() => onOpenProjectModal(project.id)}
-                  className="inline-flex items-center gap-1 text-xs font-mono font-bold text-cyan-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  <span>Dossier</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
       </div>
