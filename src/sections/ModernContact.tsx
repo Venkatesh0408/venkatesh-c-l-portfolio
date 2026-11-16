@@ -1,26 +1,34 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Globe, Bot } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Globe, Bot, MessageSquare } from 'lucide-react';
 import { profileData } from '../data/profile';
-import { GithubIcon, LinkedinIcon } from '../components/ui/Icons';
+import { GithubIcon, LinkedinIcon, WhatsappIcon } from '../components/ui/Icons';
 
 interface ModernContactProps {
   onOpenAssistant: () => void;
 }
 
 export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant }) => {
+  const [contactMethod, setContactMethod] = useState<'email' | 'whatsapp'>('email');
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    emailOrPhone: '',
     subject: 'Internship Opportunity / Engineering Inquiry',
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const mailtoUrl = `mailto:${profileData.email}?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+      `Name: ${formData.name}\nContact: ${formData.emailOrPhone}\n\nMessage:\n${formData.message}`
     )}`;
     window.location.href = mailtoUrl;
+  };
+
+  const handleWhatsAppSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const text = `Hello Venkatesh, I am contacting you regarding: ${formData.subject}\n\nName: ${formData.name}\nContact: ${formData.emailOrPhone}\n\nMessage:\n${formData.message}`;
+    const whatsappUrl = `https://wa.me/918147134789?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -38,24 +46,26 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant })
             Contact Venkatesh C L
           </h2>
           <p className="mt-2 text-neutral-400 text-sm sm:text-base leading-relaxed">
-            Direct communication channels and engineering inquiry form.
+            Choose your preferred channel below—reach out via Email or connect instantly on WhatsApp.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Left Column: Direct Links */}
+          {/* Left Column: Direct Links & Channels */}
           <div className="lg:col-span-5 space-y-4">
             
             <div className="hud-panel hud-corner rounded-3xl p-7 space-y-4 bg-neutral-950 border border-neutral-800">
               <h3 className="text-xs font-mono font-bold text-white uppercase tracking-wider pb-2 border-b border-neutral-800">
-                DIRECT CONTACT
+                DIRECT CONTACT CHANNELS
               </h3>
 
               <div className="space-y-3">
+                {/* 1. Email */}
                 <a
                   href={`mailto:${profileData.email}`}
                   className="flex items-center gap-3.5 p-3 rounded-2xl bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 hover:border-white text-neutral-300 hover:text-white transition-all group"
+                  title="Send direct email"
                 >
                   <div className="w-10 h-10 rounded-xl bg-neutral-800 flex items-center justify-center text-white shrink-0">
                     <Mail className="w-4 h-4" />
@@ -68,9 +78,30 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant })
                   </div>
                 </a>
 
+                {/* 2. WhatsApp Direct */}
+                <a
+                  href="https://wa.me/918147134789"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3.5 p-3 rounded-2xl bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 hover:border-white text-neutral-300 hover:text-white transition-all group"
+                  title="Chat directly on WhatsApp"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-neutral-800 flex items-center justify-center text-white shrink-0">
+                    <WhatsappIcon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-neutral-400 font-mono font-bold uppercase">WhatsApp Direct</div>
+                    <div className="text-xs sm:text-sm font-semibold group-hover:text-white transition-colors font-mono">
+                      +91 8147134789
+                    </div>
+                  </div>
+                </a>
+
+                {/* 3. Phone */}
                 <a
                   href={`tel:${profileData.phone}`}
                   className="flex items-center gap-3.5 p-3 rounded-2xl bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 hover:border-white text-neutral-300 hover:text-white transition-all group"
+                  title="Direct phone call"
                 >
                   <div className="w-10 h-10 rounded-xl bg-neutral-800 flex items-center justify-center text-white shrink-0">
                     <Phone className="w-4 h-4" />
@@ -83,6 +114,7 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant })
                   </div>
                 </a>
 
+                {/* 4. Location */}
                 <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-neutral-900 border border-neutral-800 text-neutral-300">
                   <div className="w-10 h-10 rounded-xl bg-neutral-800 flex items-center justify-center text-white shrink-0">
                     <MapPin className="w-4 h-4" />
@@ -99,7 +131,7 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant })
               {/* Professional Links */}
               <div className="pt-3 border-t border-neutral-800 space-y-2">
                 <div className="text-[10px] text-neutral-400 font-mono uppercase tracking-wider">
-                  Professional Profiles
+                  Professional Profiles & Projects
                 </div>
                 <div className="grid grid-cols-2 gap-2 font-mono text-xs">
                   <a
@@ -158,19 +190,62 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant })
 
           </div>
 
-          {/* Right Column: Direct Email Form */}
+          {/* Right Column: User Choice Form (Email vs WhatsApp) */}
           <div className="lg:col-span-7">
             <div className="hud-panel hud-corner rounded-3xl p-7 sm:p-8 bg-neutral-950 border border-neutral-800">
-              <div className="pb-4 border-b border-neutral-800 mb-6">
-                <h3 className="text-lg font-bold text-white tracking-tight">
-                  Send Email Message
-                </h3>
-                <p className="text-xs text-neutral-400 mt-1 font-mono">
-                  Send an inquiry or opportunity directly to <span className="text-white font-bold">{profileData.email}</span>.
-                </p>
+              
+              {/* Channel Selector Header */}
+              <div className="pb-5 border-b border-neutral-800 mb-6 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h3 className="text-lg font-bold text-white tracking-tight">
+                      Send a Message
+                    </h3>
+                    <p className="text-xs text-neutral-400 mt-0.5 font-mono">
+                      Choose how you would like to connect:
+                    </p>
+                  </div>
+
+                  {/* Option Tabs: Email vs WhatsApp */}
+                  <div className="inline-flex p-1 rounded-xl bg-neutral-900 border border-neutral-800 font-mono text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setContactMethod('email')}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                        contactMethod === 'email'
+                          ? 'bg-white text-black shadow-sm'
+                          : 'text-neutral-400 hover:text-white'
+                      }`}
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>Email</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setContactMethod('whatsapp')}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                        contactMethod === 'whatsapp'
+                          ? 'bg-white text-black shadow-sm'
+                          : 'text-neutral-400 hover:text-white'
+                      }`}
+                    >
+                      <WhatsappIcon className="w-3.5 h-3.5" />
+                      <span>WhatsApp</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="text-[11px] font-mono text-neutral-400">
+                  {contactMethod === 'email' ? (
+                    <span>Delivering directly to <strong className="text-white">{profileData.email}</strong> via your email client.</span>
+                  ) : (
+                    <span>Starting a live chat on WhatsApp with <strong className="text-white">+91 8147134789</strong>.</span>
+                  )}
+                </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4 text-xs font-mono">
+              {/* Form handling both Email and WhatsApp */}
+              <form onSubmit={contactMethod === 'email' ? handleEmailSubmit : handleWhatsAppSubmit} className="space-y-4 text-xs font-mono">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-neutral-300 font-semibold uppercase tracking-wider block">
@@ -188,14 +263,14 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant })
 
                   <div className="space-y-1.5">
                     <label className="text-neutral-300 font-semibold uppercase tracking-wider block">
-                      Your Email Address *
+                      {contactMethod === 'email' ? 'Your Email Address *' : 'Your Contact / Phone *'}
                     </label>
                     <input
-                      type="email"
+                      type={contactMethod === 'email' ? 'email' : 'text'}
                       required
-                      placeholder="user@email.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder={contactMethod === 'email' ? 'user@email.com' : '+91 / contact'}
+                      value={formData.emailOrPhone}
+                      onChange={(e) => setFormData({ ...formData, emailOrPhone: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-white placeholder-neutral-600 focus:outline-none focus:border-white transition-colors"
                     />
                   </div>
@@ -203,7 +278,7 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant })
 
                 <div className="space-y-1.5">
                   <label className="text-neutral-300 font-semibold uppercase tracking-wider block">
-                    Subject *
+                    Subject / Topic *
                   </label>
                   <input
                     type="text"
@@ -221,7 +296,11 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant })
                   <textarea
                     required
                     rows={4}
-                    placeholder="Your message or internship description..."
+                    placeholder={
+                      contactMethod === 'email'
+                        ? "Your message, questions, or internship opportunity details..."
+                        : "Type your message to send directly to Venkatesh on WhatsApp..."
+                    }
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-white placeholder-neutral-600 focus:outline-none focus:border-white transition-colors resize-none"
@@ -229,13 +308,23 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant })
                 </div>
 
                 <div className="pt-2">
-                  <button
-                    type="submit"
-                    className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-black bg-white hover:bg-neutral-200 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
-                  >
-                    <Send className="w-4 h-4" />
-                    <span>Send Email</span>
-                  </button>
+                  {contactMethod === 'email' ? (
+                    <button
+                      type="submit"
+                      className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-black bg-white hover:bg-neutral-200 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                    >
+                      <Mail className="w-4 h-4" />
+                      <span>Send via Email</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-black bg-white hover:bg-neutral-200 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                    >
+                      <WhatsappIcon className="w-4 h-4" />
+                      <span>Open & Send via WhatsApp (+91 8147134789)</span>
+                    </button>
+                  )}
                 </div>
               </form>
             </div>

@@ -36,6 +36,21 @@ export function matchAssistantQuery(userInput: string): AssistantIntent {
 export class SpeechService {
   private static synth: SpeechSynthesis | null = typeof window !== 'undefined' ? window.speechSynthesis : null;
   private static currentUtterance: SpeechSynthesisUtterance | null = null;
+  private static cachedVoices: SpeechSynthesisVoice[] = [];
+  private static isInitialized = false;
+
+  private static initVoices(): void {
+    if (!this.synth || this.isInitialized) return;
+    this.cachedVoices = this.synth.getVoices();
+    if (typeof window !== 'undefined' && this.synth.onvoiceschanged !== undefined) {
+      this.synth.onvoiceschanged = () => {
+        if (this.synth) {
+          this.cachedVoices = this.synth.getVoices();
+        }
+      };
+    }
+    this.isInitialized = true;
+  }
 
   public static isSpeechSynthesisSupported(): boolean {
     return typeof window !== 'undefined' && 'speechSynthesis' in window;
@@ -53,6 +68,60 @@ export class SpeechService {
     }
   }
 
+  public static getBestVoice(): SpeechSynthesisVoice | null {
+    this.initVoices();
+    const voices = this.cachedVoices.length > 0 ? this.cachedVoices : (this.synth ? this.synth.getVoices() : []);
+    if (!voices || voices.length === 0) return null;
+
+    // 1. Highest tier: Microsoft Natural / Neural online voices (super fluent & human-like)
+    const naturalVoice = voices.find(v => 
+      v.lang.startsWith('en') && 
+      (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Christopher') || v.name.includes('Guy') || v.name.includes('Jenny') || v.name.includes('Aria') || v.name.includes('Ryan'))
+    );
+    if (naturalVoice) return naturalVoice;
+
+    // 2. Google US/UK English natural voices
+    const googleVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Studio')));
+    if (googleVoice) return googleVoice;
+
+    // 3. Apple Enhanced voices (Daniel, Oliver, Samantha, Serena)
+    const appleVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Enhanced') || v.name.includes('Daniel') || v.name.includes('Oliver')));
+    if (appleVoice) return appleVoice;
+
+    // 4. Any English voice
+    const anyEnglish = voices.find(v => v.lang === 'en-US' || v.lang === 'en-GB' || v.lang.startsWith('en'));
+    return anyEnglish || voices[0] || null;
+  }
+
+  public static getBestVoiceName(): string {
+    const voice = this.getBestVoice();
+    if (!voice) return "Standard Web Speech Engine";
+    return voice.name.replace(/Microsoft |Online |\(Natural\) |\(Enhanced\) |English /gi, '').trim() + " (Natural)";
+  }
+
+  /**
+   * Cleans text and optimizes technical acronym pronunciation for smooth human cadency
+   */
+  public static formatTextForSpeech(text: string): string {
+    return text
+      .replace(/\*\*/g, '')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/[#*_`]/g, '')
+      .replace(/ESP8266/gi, 'E. S. P. 82 66')
+      .replace(/ESP32-CAM/gi, 'E. S. P. 32 Cam')
+      .replace(/ESP32/gi, 'E. S. P. 32')
+      .replace(/VTU/gi, 'V. T. U.')
+      .replace(/RRCE/gi, 'R. R. C. E.')
+      .replace(/CGPA/gi, 'C. G. P. A.')
+      .replace(/PLC/gi, 'P. L. C.')
+      .replace(/EEE/gi, 'E. E. E.')
+      .replace(/SSLC/gi, 'S. S. L. C.')
+      .replace(/AI/gi, 'A. I.')
+      .replace(/CAD/gi, 'Cad')
+      .replace(/–/g, ' to ')
+      .trim();
+  }
+
   public static speak(text: string, onEnd?: () => void, onError?: () => void): void {
     if (!this.synth) {
       if (onEnd) onEnd();
@@ -60,24 +129,16 @@ export class SpeechService {
     }
 
     this.stopSpeaking();
-
-    // Clean plain text for speech
-    const cleanSpeech = text
-      .replace(/\*\*/g, '')
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-      .replace(/[#*_`]/g, '')
-      .trim();
+    const cleanSpeech = this.formatTextForSpeech(text);
 
     const utterance = new SpeechSynthesisUtterance(cleanSpeech);
     utterance.rate = 1.0;
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
 
-    // Pick best English voice if available
-    const voices = this.synth.getVoices();
-    const englishVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('David') || v.name.includes('Male')));
-    if (englishVoice) {
-      utterance.voice = englishVoice;
+    const voice = this.getBestVoice();
+    if (voice) {
+      utterance.voice = voice;
     }
 
     utterance.onend = () => {
@@ -85,7 +146,7 @@ export class SpeechService {
       if (onEnd) onEnd();
     };
 
-    utterance.onerror = () => {
+    utterance.onerror = (e) => {
       this.currentUtterance = null;
       if (onError) onError();
     };
