@@ -39,7 +39,7 @@ export const profileData: Profile = {
   whatsapp: "https://wa.me/918147134789",
   linkedin: "https://linkedin.com/in/venkatesh-venky-a63639313",
   github: "https://github.com/Venkatesh0408",
-  portfolio: "https://venkateshcl-portfolio.vercel.app",
+  portfolio: "https://venkatesh-c-l-portfolio.vercel.app",
   projectDemo: "https://submersible-micro-robot.onrender.com",
   resumeUrl: "/assets/Venkatesh_CL_RESUME.pdf",
   languages: [
