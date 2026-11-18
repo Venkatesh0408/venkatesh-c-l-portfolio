@@ -1,14 +1,15 @@
 import React from 'react';
 import { FileText, ArrowRight, Mail, Phone, Bot, Award, CheckCircle2, Globe, Eye } from 'lucide-react';
 import { profileData } from '../data/profile';
+import { projectsData } from '../data/projects';
 import { GithubIcon, LinkedinIcon } from '../components/ui/Icons';
+import { DemoHoverMenu } from '../components/project/DemoHoverMenu';
 
 interface ModernHeroProps {
   onExploreProjects: () => void;
   onContactMe: () => void;
   onOpenAssistant: () => void;
   onViewResume: () => void;
-  onOpenDemo: () => void;
 }
 
 export const ModernHero: React.FC<ModernHeroProps> = ({
@@ -16,8 +17,8 @@ export const ModernHero: React.FC<ModernHeroProps> = ({
   onContactMe,
   onOpenAssistant,
   onViewResume,
-  onOpenDemo,
 }) => {
+  const flagshipDemoLinks = projectsData.find((p) => p.id === 'submersible-micro-robot')?.demoLinks;
   return (
     <section id="hero" className="relative min-h-[660px] lg:min-h-[720px] flex items-center pt-24 pb-16 overflow-hidden bg-black">
       {/* Subtle Monochrome Technical Grid */}
@@ -111,14 +112,16 @@ export const ModernHero: React.FC<ModernHeroProps> = ({
                 <GithubIcon className="w-3.5 h-3.5" />
                 <span>GitHub</span>
               </a>
-              <button
-                type="button"
-                onClick={onOpenDemo}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-white hover:text-white transition-all cursor-pointer"
-              >
-                <Globe className="w-3.5 h-3.5 text-white" />
-                <span>Project Demo</span>
-              </button>
+              {flagshipDemoLinks && (
+                <DemoHoverMenu
+                  demoLinks={flagshipDemoLinks}
+                  label="Project Demo"
+                  variant="pill"
+                  align="left"
+                  direction="up"
+                  icon={<Globe className="w-3.5 h-3.5 text-white" />}
+                />
+              )}
             </div>
           </div>
 

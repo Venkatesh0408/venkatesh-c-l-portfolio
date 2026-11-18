@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { X, AlertTriangle, ExternalLink, CheckCircle2, ChevronDown } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { X, AlertTriangle, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { GithubIcon } from '../ui/Icons';
 import { ProjectItem } from '../../data/projects';
-import { DemoOptionsPanel } from './DemoSelector';
+import { DemoHoverMenu } from './DemoHoverMenu';
 
 interface ProjectModalProps {
   project: ProjectItem | null;
@@ -10,12 +10,6 @@ interface ProjectModalProps {
 }
 
 export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
-  const [showDemoOptions, setShowDemoOptions] = useState(false);
-
-  useEffect(() => {
-    setShowDemoOptions(false);
-  }, [project?.id]);
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -63,18 +57,13 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
             {/* Quick Action Links */}
             <div className="flex flex-wrap items-center gap-3 mt-4 font-mono">
               {project.demoLinks ? (
-                <button
-                  type="button"
-                  onClick={() => setShowDemoOptions((prev) => !prev)}
-                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white text-black hover:bg-neutral-200 text-xs font-bold transition-colors shadow-sm cursor-pointer"
-                >
-                  <span>Live Project Demo</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-300 ${
-                      showDemoOptions ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
+                <DemoHoverMenu
+                  demoLinks={project.demoLinks}
+                  label="Live Project Demo"
+                  variant="primary"
+                  align="left"
+                  direction="down"
+                />
               ) : (
                 project.demoUrl && (
                   <a
@@ -100,14 +89,6 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
                 </a>
               )}
             </div>
-
-            {project.demoLinks && (
-              <DemoOptionsPanel
-                isOpen={showDemoOptions}
-                demoLinks={project.demoLinks}
-                onClose={() => setShowDemoOptions(false)}
-              />
-            )}
           </div>
 
           {/* Verified Engineering Boundary Notice */}

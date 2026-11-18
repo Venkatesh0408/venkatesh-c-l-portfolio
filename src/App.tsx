@@ -12,7 +12,6 @@ import { ModernLanguages } from './sections/ModernLanguages';
 import { ModernContact } from './sections/ModernContact';
 import { VenkyAssistant } from './components/assistant/VenkyAssistant';
 import { ProjectModal } from './components/project/ProjectModal';
-import { DemoSelectorModal } from './components/project/DemoSelector';
 import { ResumeViewerModal } from './components/resume/ResumeViewerModal';
 import { projectsData } from './data/projects';
 import { Bot, AlertTriangle } from 'lucide-react';
@@ -70,7 +69,6 @@ export function AppContent() {
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [isResumeViewerOpen, setIsResumeViewerOpen] = useState(false);
-  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   // Hash navigation on mount
@@ -115,7 +113,6 @@ export function AppContent() {
   }, []);
 
   const activeProject = projectsData.find(p => p.id === selectedProjectId) || null;
-  const flagshipDemoLinks = projectsData.find(p => p.id === 'submersible-micro-robot')?.demoLinks;
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black relative font-sans">
@@ -134,7 +131,6 @@ export function AppContent() {
           onContactMe={() => scrollToSection('contact')}
           onOpenAssistant={() => setIsAssistantOpen(true)}
           onViewResume={() => setIsResumeViewerOpen(true)}
-          onOpenDemo={() => setIsDemoModalOpen(true)}
         />
 
         <ModernAbout />
@@ -156,7 +152,6 @@ export function AppContent() {
 
         <ModernContact
           onOpenAssistant={() => setIsAssistantOpen(true)}
-          onOpenDemo={() => setIsDemoModalOpen(true)}
         />
       </main>
 
@@ -207,16 +202,6 @@ export function AppContent() {
         isOpen={isResumeViewerOpen}
         onClose={() => setIsResumeViewerOpen(false)}
       />
-
-      {/* 8. Animated Project Demo Selector Modal (Vercel vs Render) */}
-      {flagshipDemoLinks && (
-        <DemoSelectorModal
-          isOpen={isDemoModalOpen}
-          projectTitle="Submersible Micro Robot – Underwater Inspection"
-          demoLinks={flagshipDemoLinks}
-          onClose={() => setIsDemoModalOpen(false)}
-        />
-      )}
     </div>
   );
 }

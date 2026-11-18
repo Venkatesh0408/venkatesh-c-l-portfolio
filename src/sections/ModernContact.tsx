@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, Globe, Bot, MessageSquare } from 'lucide-react';
 import { profileData } from '../data/profile';
+import { projectsData } from '../data/projects';
 import { GithubIcon, LinkedinIcon, WhatsappIcon } from '../components/ui/Icons';
+import { DemoHoverMenu } from '../components/project/DemoHoverMenu';
 
 interface ModernContactProps {
   onOpenAssistant: () => void;
-  onOpenDemo: () => void;
 }
 
-export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant, onOpenDemo }) => {
+export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant }) => {
+  const flagshipDemoLinks = projectsData.find((p) => p.id === 'submersible-micro-robot')?.demoLinks;
   const [contactMethod, setContactMethod] = useState<'email' | 'whatsapp'>('email');
   const [formData, setFormData] = useState({
     name: '',
@@ -162,17 +164,17 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant, o
                     <Globe className="w-4 h-4 text-white" />
                     <span>Portfolio (vercel.app)</span>
                   </a>
-                  <button
-                    type="button"
-                    onClick={onOpenDemo}
-                    className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-white text-neutral-300 hover:text-white flex items-center justify-between gap-2 transition-all col-span-2 cursor-pointer text-left"
-                  >
-                    <span className="flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-white" />
-                      <span>Project Demo (Vercel / Render)</span>
-                    </span>
-                    <span className="text-[10px] text-neutral-400">Choose ▾</span>
-                  </button>
+                  {flagshipDemoLinks && (
+                    <DemoHoverMenu
+                      demoLinks={flagshipDemoLinks}
+                      label="Project Demo (Vercel / Render)"
+                      variant="card"
+                      align="left"
+                      direction="up"
+                      icon={<Globe className="w-4 h-4 text-white" />}
+                      className="col-span-2 w-full"
+                    />
+                  )}
                 </div>
               </div>
 
