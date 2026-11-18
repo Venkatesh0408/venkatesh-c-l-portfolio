@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
-import { Trophy, Wrench, CheckCircle2, X, Eye } from 'lucide-react';
-import { awardsList } from '../data/achievements';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Trophy, Wrench, CheckCircle2, X, Eye, Download, ExternalLink } from 'lucide-react';
+import { awardsList, AwardItem } from '../data/achievements';
 
 export const ModernAchievements: React.FC = () => {
-  const [selectedScan, setSelectedScan] = useState<string | null>(null);
+  const [selectedAward, setSelectedAward] = useState<AwardItem | null>(null);
 
   const awards = awardsList.filter(a => a.category === "Award");
   const workshops = awardsList.filter(a => a.category === "Workshop");
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedAward(null);
+    };
+    if (selectedAward) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedAward]);
 
   return (
     <section id="achievements" className="py-20 relative bg-black border-t border-neutral-800">
@@ -50,8 +61,10 @@ export const ModernAchievements: React.FC = () => {
 
                   {award.scanUrl && (
                     <button
-                      onClick={() => setSelectedScan(award.scanUrl!)}
+                      type="button"
+                      onClick={() => setSelectedAward(award)}
                       className="shrink-0 px-2.5 py-1 rounded-lg bg-neutral-800 text-white hover:bg-white hover:text-black font-mono text-xs font-bold transition-all flex items-center gap-1 cursor-pointer border border-neutral-700"
+                      title="View Certificate"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>View</span>
@@ -89,25 +102,83 @@ export const ModernAchievements: React.FC = () => {
 
         </div>
 
-        {/* Certificate Scan Modal */}
-        {selectedScan && (
-          <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-            <div className="relative max-w-xl w-full bg-neutral-950 border border-neutral-700 rounded-2xl overflow-hidden shadow-2xl">
-              <div className="p-4 bg-black border-b border-neutral-800 flex items-center justify-between">
-                <span className="text-sm font-bold text-white font-mono">Certificate Scan</span>
-                <button
-                  onClick={() => setSelectedScan(null)}
-                  className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="p-4 bg-black flex items-center justify-center">
-                <img src={selectedScan} alt="Certificate Scan" className="max-h-[70vh] object-contain rounded-lg" />
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Animated Certificate Viewer Modal */}
+        <AnimatePresence>
+          {selectedAward && selectedAward.scanUrl && (
+            <motion.div
+              key="cert-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setSelectedAward(null)}
+              className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6"
+            >
+              <motion.div
+                key="cert-modal"
+                initial={{ opacity: 0, scale: 0.94, y: 14 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96, y: 10 }}
+                transition={{ type: 'spring', stiffness: 360, damping: 28 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative max-w-3xl w-full bg-neutral-950 border border-neutral-700 rounded-2xl overflow-hidden shadow-2xl"
+              >
+                <div className="px-4 sm:px-5 py-3.5 bg-neutral-900 border-b border-neutral-800 flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <span className="text-xs sm:text-sm font-bold text-white font-mono block truncate">
+                      {selectedAward.title}
+                    </span>
+                    <span className="text-[10px] text-neutral-400 font-mono uppercase tracking-wider">
+                      Verified Certificate
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0 font-mono">
+                    {selectedAward.pdfUrl && (
+                      <>
+                        <a
+                          href={selectedAward.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-2.5 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 hover:text-white border border-neutral-700 text-xs flex items-center gap-1.5 transition-colors"
+                          title="Open PDF in new tab"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">PDF</span>
+                        </a>
+                        <a
+                          href={selectedAward.pdfUrl}
+                          download
+                          className="px-3 py-1.5 rounded-lg bg-white hover:bg-neutral-200 text-black font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
+                          title="Download Certificate PDF"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Download</span>
+                        </a>
+                      </>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedAward(null)}
+                      className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+                      title="Close (ESC)"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-3 sm:p-5 bg-black flex items-center justify-center">
+                  <img
+                    src={selectedAward.scanUrl}
+                    alt={selectedAward.title}
+                    className="max-h-[75vh] w-auto object-contain rounded-lg border border-neutral-800 shadow-lg"
+                  />
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
       </div>
     </section>

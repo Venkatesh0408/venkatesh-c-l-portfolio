@@ -3,6 +3,7 @@ export interface AwardItem {
   title: string;
   category: "Award" | "Workshop";
   scanUrl?: string;
+  pdfUrl?: string;
 }
 
 export const awardsList: AwardItem[] = [
@@ -30,7 +31,9 @@ export const awardsList: AwardItem[] = [
   {
     id: "agentic-ai",
     title: "Participant – Agentic AI Hackathon (12–13 March 2026)",
-    category: "Award"
+    category: "Award",
+    scanUrl: "/assets/agentic-ai-hackathon-certificate.png",
+    pdfUrl: "/assets/Agentic_AI_Hackathon_Certificate.pdf"
   },
   {
     id: "pneumatics",
