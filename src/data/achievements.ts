@@ -10,13 +10,16 @@ export const awardsList: AwardItem[] = [
   {
     id: "innovesta",
     title: "First Place – Fashion Walk, INNOVESTA 2K26, Surana College (27–28 February 2026)",
-    category: "Award"
+    category: "Award",
+    scanUrl: "/assets/innovesta-2k26-certificate.jpg",
+    pdfUrl: "/assets/INNOVESTA_2K26_Fashion_Walk_Certificate.pdf"
   },
   {
     id: "innovex",
     title: "First Prize – College-Level Project Exhibition, Innovex 2026 (3 November 2026)",
     category: "Award",
-    scanUrl: "/assets/award-logo.png"
+    scanUrl: "/assets/innovex-2026-certificate.jpg",
+    pdfUrl: "/assets/Innovex_2026_Project_Exhibition_Certificate.pdf"
   },
   {
     id: "silent-stream",
