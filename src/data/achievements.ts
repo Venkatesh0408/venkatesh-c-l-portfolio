@@ -21,7 +21,9 @@ export const awardsList: AwardItem[] = [
   {
     id: "silent-stream",
     title: "Second Prize – Water Conservation Short Film, “Silent Stream” (SCR Activity)",
-    category: "Award"
+    category: "Award",
+    scanUrl: "/assets/water-conservation-certificate.jpg",
+    pdfUrl: "/assets/Water_Conservation_Silent_Stream_Certificate.pdf"
   },
   {
     id: "sports",
