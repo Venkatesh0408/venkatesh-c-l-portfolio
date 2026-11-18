@@ -13,6 +13,7 @@ export interface Profile {
   github: string;
   portfolio: string;
   projectDemo: string;
+  projectDemoRender: string;
   resumeUrl: string;
   languages: { language: string; proficiency: string }[];
   areasOfInterest: string[];
@@ -40,7 +41,8 @@ export const profileData: Profile = {
   linkedin: "https://linkedin.com/in/venkatesh-venky-a63639313",
   github: "https://github.com/Venkatesh0408",
   portfolio: "https://venkatesh-c-l-portfolio.vercel.app",
-  projectDemo: "https://submersible-micro-robot.onrender.com",
+  projectDemo: "https://submersible-micro-robot.vercel.app/",
+  projectDemoRender: "https://submersible-micro-robot.onrender.com",
   resumeUrl: "/assets/Venkatesh_CL_RESUME.pdf",
   languages: [
     { language: "Kannada", proficiency: "Advanced" },

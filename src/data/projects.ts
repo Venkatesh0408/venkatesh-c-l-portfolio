@@ -1,3 +1,9 @@
+export interface ProjectDemoLinks {
+  vercelUrl: string;
+  renderUrl: string;
+  backendNote: string;
+}
+
 export interface ProjectItem {
   id: string;
   title: string;
@@ -5,6 +11,7 @@ export interface ProjectItem {
   points: string[];
   githubUrl?: string;
   demoUrl?: string;
+  demoLinks?: ProjectDemoLinks;
   images: { url: string; caption: string }[];
   verifiedNote?: string;
 }
@@ -23,7 +30,13 @@ export const projectsData: ProjectItem[] = [
       "Camera-based visual assessment is distinguished from measured pH; the project does not use a pH sensor."
     ],
     githubUrl: "https://github.com/Venkatesh0408",
-    demoUrl: "https://submersible-micro-robot.onrender.com",
+    demoUrl: "https://submersible-micro-robot.vercel.app/",
+    demoLinks: {
+      vercelUrl: "https://submersible-micro-robot.vercel.app/",
+      renderUrl: "https://submersible-micro-robot.onrender.com",
+      backendNote:
+        "This project relies heavily on backend processing. Using Vercel loads quickly for previewing the interface, but backend features cannot be accessed on Vercel. Use Render for full backend functionality (may take a moment to wake up)."
+    },
     images: [
       { url: "/assets/test1.png", caption: "Physical Tank Submersion & Buoyancy Testing" },
       { url: "/assets/test2.png", caption: "Electronics Assembly & Turbidity Sensor Calibration" },

@@ -1,13 +1,16 @@
-import React from 'react';
-import { ExternalLink, Award, AlertTriangle, ArrowUpRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ExternalLink, Award, AlertTriangle, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { projectsData } from '../data/projects';
 import { GithubIcon } from '../components/ui/Icons';
+import { DemoOptionsPanel } from '../components/project/DemoSelector';
 
 interface ModernProjectsProps {
   onOpenProjectModal?: (projectId: string) => void;
 }
 
 export const ModernProjects: React.FC<ModernProjectsProps> = () => {
+  const [openDemoId, setOpenDemoId] = useState<string | null>(null);
+
   return (
     <section id="projects" className="py-20 relative bg-black border-t border-neutral-800">
       <div className="absolute inset-0 tech-grid opacity-10 pointer-events-none" />
@@ -62,17 +65,37 @@ export const ModernProjects: React.FC<ModernProjectsProps> = () => {
 
                   {/* Project URLs */}
                   <div className="flex flex-wrap items-center gap-2.5 shrink-0 font-mono text-xs">
-                    {project.demoUrl && (
-                      <a
-                        href={project.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white text-black font-bold hover:bg-neutral-200 transition-colors shadow-sm"
-                        title="Open live project deployment"
+                    {project.demoLinks ? (
+                      <button
+                        type="button"
+                        onClick={() => setOpenDemoId(openDemoId === project.id ? null : project.id)}
+                        className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-bold transition-all shadow-sm cursor-pointer ${
+                          openDemoId === project.id
+                            ? 'bg-neutral-200 text-black ring-2 ring-white/40'
+                            : 'bg-white text-black hover:bg-neutral-200'
+                        }`}
+                        title="Choose Vercel or Render demo deployment"
                       >
                         <span>Live Demo</span>
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
+                        <ChevronDown
+                          className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                            openDemoId === project.id ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+                    ) : (
+                      project.demoUrl && (
+                        <a
+                          href={project.demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white text-black font-bold hover:bg-neutral-200 transition-colors shadow-sm"
+                          title="Open live project deployment"
+                        >
+                          <span>Live Demo</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      )
                     )}
                     {project.githubUrl && (
                       <a
@@ -89,6 +112,15 @@ export const ModernProjects: React.FC<ModernProjectsProps> = () => {
                     )}
                   </div>
                 </div>
+
+                {/* Smoothly Animated Vercel / Render Demo Selector Panel */}
+                {project.demoLinks && (
+                  <DemoOptionsPanel
+                    isOpen={openDemoId === project.id}
+                    demoLinks={project.demoLinks}
+                    onClose={() => setOpenDemoId(null)}
+                  />
+                )}
 
                 {/* Brief Explanation in Points */}
                 <div className="mt-5 space-y-3">

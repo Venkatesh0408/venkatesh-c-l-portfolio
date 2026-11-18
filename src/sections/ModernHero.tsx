@@ -8,6 +8,7 @@ interface ModernHeroProps {
   onContactMe: () => void;
   onOpenAssistant: () => void;
   onViewResume: () => void;
+  onOpenDemo: () => void;
 }
 
 export const ModernHero: React.FC<ModernHeroProps> = ({
@@ -15,6 +16,7 @@ export const ModernHero: React.FC<ModernHeroProps> = ({
   onContactMe,
   onOpenAssistant,
   onViewResume,
+  onOpenDemo,
 }) => {
   return (
     <section id="hero" className="relative min-h-[660px] lg:min-h-[720px] flex items-center pt-24 pb-16 overflow-hidden bg-black">
@@ -109,15 +111,14 @@ export const ModernHero: React.FC<ModernHeroProps> = ({
                 <GithubIcon className="w-3.5 h-3.5" />
                 <span>GitHub</span>
               </a>
-              <a
-                href={profileData.projectDemo}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-white hover:text-white transition-all"
+              <button
+                type="button"
+                onClick={onOpenDemo}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-white hover:text-white transition-all cursor-pointer"
               >
                 <Globe className="w-3.5 h-3.5 text-white" />
                 <span>Project Demo</span>
-              </a>
+              </button>
             </div>
           </div>
 

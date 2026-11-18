@@ -5,9 +5,10 @@ import { GithubIcon, LinkedinIcon, WhatsappIcon } from '../components/ui/Icons';
 
 interface ModernContactProps {
   onOpenAssistant: () => void;
+  onOpenDemo: () => void;
 }
 
-export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant }) => {
+export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant, onOpenDemo }) => {
   const [contactMethod, setContactMethod] = useState<'email' | 'whatsapp'>('email');
   const [formData, setFormData] = useState({
     name: '',
@@ -161,15 +162,17 @@ export const ModernContact: React.FC<ModernContactProps> = ({ onOpenAssistant })
                     <Globe className="w-4 h-4 text-white" />
                     <span>Portfolio (vercel.app)</span>
                   </a>
-                  <a
-                    href={profileData.projectDemo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-white text-neutral-300 hover:text-white flex items-center gap-2 transition-all col-span-2"
+                  <button
+                    type="button"
+                    onClick={onOpenDemo}
+                    className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-white text-neutral-300 hover:text-white flex items-center justify-between gap-2 transition-all col-span-2 cursor-pointer text-left"
                   >
-                    <Globe className="w-4 h-4 text-white" />
-                    <span>Project Demo (onrender.com)</span>
-                  </a>
+                    <span className="flex items-center gap-2">
+                      <Globe className="w-4 h-4 text-white" />
+                      <span>Project Demo (Vercel / Render)</span>
+                    </span>
+                    <span className="text-[10px] text-neutral-400">Choose ▾</span>
+                  </button>
                 </div>
               </div>
 
