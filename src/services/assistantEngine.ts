@@ -39,6 +39,15 @@ export class SpeechService {
   private static cachedVoices: SpeechSynthesisVoice[] = [];
   private static isInitialized = false;
 
+  // ElevenLabs High-Definition Voice Configuration
+  private static activeAudio: HTMLAudioElement | null = null;
+  private static abortController: AbortController | null = null;
+  private static audioCache = new Map<string, string>(); // cleanText -> blobUrl
+
+  private static readonly ELEVENLABS_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY || 'sk_4652efd3468fc48ac5aaf9802da653981d8411caf0d7f0f4';
+  private static readonly ELEVENLABS_VOICE_ID = import.meta.env.VITE_ELEVENLABS_VOICE_ID || 'JBFqnCBsd6RMkjVDRZzb'; // George (Professional Male)
+  private static readonly ELEVENLABS_MODEL_ID = import.meta.env.VITE_ELEVENLABS_MODEL_ID || 'eleven_turbo_v2_5';
+
   private static initVoices(): void {
     if (!this.synth || this.isInitialized) return;
     this.cachedVoices = this.synth.getVoices();
@@ -53,7 +62,8 @@ export class SpeechService {
   }
 
   public static isSpeechSynthesisSupported(): boolean {
-    return typeof window !== 'undefined' && 'speechSynthesis' in window;
+    if (typeof window === 'undefined') return false;
+    return Boolean(this.ELEVENLABS_KEY) || ('speechSynthesis' in window);
   }
 
   public static isSpeechRecognitionSupported(): boolean {
@@ -62,10 +72,23 @@ export class SpeechService {
   }
 
   public static stopSpeaking(): void {
+    if (this.abortController) {
+      this.abortController.abort();
+      this.abortController = null;
+    }
+    if (this.activeAudio) {
+      this.activeAudio.pause();
+      this.activeAudio.currentTime = 0;
+      this.activeAudio = null;
+    }
     if (this.synth) {
       this.synth.cancel();
       this.currentUtterance = null;
     }
+  }
+
+  public static isCurrentlySpeaking(): boolean {
+    return Boolean(this.activeAudio) || Boolean(this.synth && this.synth.speaking);
   }
 
   public static getBestVoice(): SpeechSynthesisVoice | null {
@@ -73,7 +96,7 @@ export class SpeechService {
     const voices = this.cachedVoices.length > 0 ? this.cachedVoices : (this.synth ? this.synth.getVoices() : []);
     if (!voices || voices.length === 0) return null;
 
-    // 1. Highest tier: Microsoft Natural / Neural online voices (super fluent & human-like)
+    // 1. Highest tier: Microsoft Natural / Neural online voices
     const naturalVoice = voices.find(v => 
       v.lang.startsWith('en') && 
       (v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Christopher') || v.name.includes('Guy') || v.name.includes('Jenny') || v.name.includes('Aria') || v.name.includes('Ryan'))
@@ -84,7 +107,7 @@ export class SpeechService {
     const googleVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Studio')));
     if (googleVoice) return googleVoice;
 
-    // 3. Apple Enhanced voices (Daniel, Oliver, Samantha, Serena)
+    // 3. Apple Enhanced voices
     const appleVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Enhanced') || v.name.includes('Daniel') || v.name.includes('Oliver')));
     if (appleVoice) return appleVoice;
 
@@ -94,6 +117,9 @@ export class SpeechService {
   }
 
   public static getBestVoiceName(): string {
+    if (this.ELEVENLABS_KEY) {
+      return "ElevenLabs Neural Voice (George - HD)";
+    }
     const voice = this.getBestVoice();
     if (!voice) return "Standard Web Speech Engine";
     return voice.name.replace(/Microsoft |Online |\(Natural\) |\(Enhanced\) |English /gi, '').trim() + " (Natural)";
@@ -122,14 +148,49 @@ export class SpeechService {
       .trim();
   }
 
-  public static speak(text: string, onEnd?: () => void, onError?: () => void): void {
+  private static playAudioBlobUrl(url: string, onEnd?: () => void, onError?: () => void): void {
+    try {
+      const audio = new Audio(url);
+      this.activeAudio = audio;
+
+      audio.onended = () => {
+        if (this.activeAudio === audio) {
+          this.activeAudio = null;
+        }
+        if (onEnd) onEnd();
+      };
+
+      audio.onerror = (e) => {
+        console.warn('[VENKY AI] Audio playback error:', e);
+        if (this.activeAudio === audio) {
+          this.activeAudio = null;
+        }
+        if (onError) onError();
+      };
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          if (err.name === 'AbortError') return;
+          console.warn('[VENKY AI] Autoplay prevented or aborted:', err);
+          if (this.activeAudio === audio) {
+            this.activeAudio = null;
+          }
+          if (onError) onError();
+        });
+      }
+    } catch (err) {
+      console.warn('[VENKY AI] Play error:', err);
+      this.activeAudio = null;
+      if (onError) onError();
+    }
+  }
+
+  private static speakWithWebSpeech(cleanSpeech: string, onEnd?: () => void, onError?: () => void): void {
     if (!this.synth) {
       if (onEnd) onEnd();
       return;
     }
-
-    this.stopSpeaking();
-    const cleanSpeech = this.formatTextForSpeech(text);
 
     const utterance = new SpeechSynthesisUtterance(cleanSpeech);
     utterance.rate = 1.0;
@@ -146,12 +207,76 @@ export class SpeechService {
       if (onEnd) onEnd();
     };
 
-    utterance.onerror = (e) => {
+    utterance.onerror = () => {
       this.currentUtterance = null;
       if (onError) onError();
     };
 
     this.currentUtterance = utterance;
     this.synth.speak(utterance);
+  }
+
+  public static async speak(text: string, onEnd?: () => void, onError?: () => void): Promise<void> {
+    this.stopSpeaking();
+    const cleanSpeech = this.formatTextForSpeech(text);
+    if (!cleanSpeech) {
+      if (onEnd) onEnd();
+      return;
+    }
+
+    // 1. Instant cache playback if already synthesized
+    if (this.audioCache.has(cleanSpeech)) {
+      const cachedUrl = this.audioCache.get(cleanSpeech)!;
+      this.playAudioBlobUrl(cachedUrl, onEnd, onError);
+      return;
+    }
+
+    // 2. ElevenLabs High-Definition Neural Voice
+    if (this.ELEVENLABS_KEY && typeof window !== 'undefined' && typeof fetch === 'function') {
+      const controller = new AbortController();
+      this.abortController = controller;
+
+      try {
+        const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${this.ELEVENLABS_VOICE_ID}`, {
+          method: 'POST',
+          signal: controller.signal,
+          headers: {
+            'xi-api-key': this.ELEVENLABS_KEY,
+            'Content-Type': 'application/json',
+            'Accept': 'audio/mpeg'
+          },
+          body: JSON.stringify({
+            text: cleanSpeech,
+            model_id: this.ELEVENLABS_MODEL_ID,
+            voice_settings: {
+              stability: 0.5,
+              similarity_boost: 0.75,
+              style: 0.0,
+              use_speaker_boost: true
+            }
+          })
+        });
+
+        if (response.ok) {
+          const blob = await response.blob();
+          const audioUrl = URL.createObjectURL(blob);
+          this.audioCache.set(cleanSpeech, audioUrl);
+          this.abortController = null;
+          this.playAudioBlobUrl(audioUrl, onEnd, onError);
+          return;
+        } else {
+          const errText = await response.text();
+          console.warn(`[VENKY AI] ElevenLabs TTS returned ${response.status}:`, errText);
+        }
+      } catch (err: any) {
+        if (err.name === 'AbortError') {
+          return; // Intentional stop or replacement
+        }
+        console.warn('[VENKY AI] ElevenLabs error, falling back to Web Speech:', err);
+      }
+    }
+
+    // 3. Fallback to Web Speech API
+    this.speakWithWebSpeech(cleanSpeech, onEnd, onError);
   }
 }

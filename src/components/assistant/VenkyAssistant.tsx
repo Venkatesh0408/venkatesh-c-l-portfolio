@@ -198,8 +198,9 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
               <span>VENKY AI // ASSISTANT</span>
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             </div>
-            <div className="text-[10px] text-neutral-400">
-              Natural Voice & Interactive Guide
+            <div className="text-[10px] text-emerald-400 font-mono flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>ElevenLabs Neural Voice (HD)</span>
             </div>
           </div>
         </div>
@@ -234,9 +235,9 @@ export const VenkyAssistant: React.FC<VenkyAssistantProps> = ({
       {/* Proactive Welcome Banner with Audio Intro Button */}
       <div className="bg-neutral-900/80 px-4 py-3 border-b border-neutral-800 flex items-center justify-between gap-3 font-mono text-xs">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-white shrink-0" />
+          <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
           <span className="text-neutral-300 text-[11px] truncate">
-            {isSpeaking ? "Speaking now..." : "Natural Voice Engine Ready"}
+            {isSpeaking ? "Speaking now (ElevenLabs HD)..." : "ElevenLabs Voice Ready • George (HD)"}
           </span>
         </div>
         <button
