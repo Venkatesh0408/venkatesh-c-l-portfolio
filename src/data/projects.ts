@@ -81,6 +81,7 @@ export const projectsData: ProjectItem[] = [
       "Focused on presenting information through a user-friendly interface."
     ],
     githubUrl: "https://github.com/Venkatesh0408",
+    demoUrl: "https://ai-health-assistant-85q.pages.dev/",
     images: []
   }
 ];
