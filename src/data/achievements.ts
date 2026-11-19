@@ -31,7 +31,9 @@ export const awardsList: AwardItem[] = [
   {
     id: "sports",
     title: "Second Prize – Tug of War | Third Prize – Chess",
-    category: "Award"
+    category: "Award",
+    scanUrl: "/assets/sports-tug-of-war-chess-trophies.jpg",
+    pdfUrl: "/assets/Sports_Tug_Of_War_Chess_Award.pdf"
   },
   {
     id: "agentic-ai",

@@ -64,7 +64,7 @@ export const ModernAchievements: React.FC = () => {
                       type="button"
                       onClick={() => setSelectedAward(award)}
                       className="shrink-0 px-2.5 py-1 rounded-lg bg-neutral-800 text-white hover:bg-white hover:text-black font-mono text-xs font-bold transition-all flex items-center gap-1 cursor-pointer border border-neutral-700"
-                      title="View Certificate"
+                      title={award.id === "sports" ? "View Award Trophies" : "View Certificate"}
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>View</span>
@@ -129,7 +129,7 @@ export const ModernAchievements: React.FC = () => {
                       {selectedAward.title}
                     </span>
                     <span className="text-[10px] text-neutral-400 font-mono uppercase tracking-wider">
-                      Verified Certificate
+                      {selectedAward.id === "sports" ? "Verified Award & Trophies" : "Verified Certificate"}
                     </span>
                   </div>
 
@@ -150,7 +150,7 @@ export const ModernAchievements: React.FC = () => {
                           href={selectedAward.pdfUrl}
                           download
                           className="px-3 py-1.5 rounded-lg bg-white hover:bg-neutral-200 text-black font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
-                          title="Download Certificate PDF"
+                          title={selectedAward.id === "sports" ? "Download Award PDF" : "Download Certificate PDF"}
                         >
                           <Download className="w-3.5 h-3.5" />
                           <span className="hidden sm:inline">Download</span>

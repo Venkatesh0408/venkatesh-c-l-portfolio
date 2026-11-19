@@ -129,12 +129,13 @@ export const assistantIntents: AssistantIntent[] = [
   },
   {
     id: "achievements",
-    keywords: ["achievements", "awards", "honors", "innovex", "certificates", "hackathon", "prizes"],
-    spokenText: "Venkatesh won First Prize at Innovex 2026 for his underwater robot, First Place in the INNOVESTA 2K26 Fashion Walk, and participated in both the Agentic AI Hackathon and MSME Hackathon. Navigating to Achievements.",
+    keywords: ["achievements", "awards", "honors", "innovex", "certificates", "hackathon", "prizes", "chess", "tug of war", "sports"],
+    spokenText: "Venkatesh won First Prize at Innovex 2026 for his underwater robot, First Place in the INNOVESTA 2K26 Fashion Walk, Second Prize in Tug of War and Third Prize in Chess, and participated in both the Agentic AI Hackathon and MSME Hackathon. Navigating to Achievements.",
     displayedText: `**Honors, Competitions & Certificates:**
 
 - **1st Prize:** College-Level Project Exhibition at **Innovex 2026** (RRCE) for the Submersible Micro Robot.
 - **1st Place:** Fashion Walk at **INNOVESTA 2K26** (Surana College).
+- **2nd Prize (Tug of War) & 3rd Prize (Chess):** Sports & strategic competition trophy honors.
 - **Participant:** **Agentic AI Hackathon** (12–13 March 2026) — Verified Certificate Scan available.
 - **2nd Prize:** Water Conservation Short Film *"Silent Stream"*.
 - **Certified Workshop:** 5-Day Intensive Workshop on **Pneumatics & Electro-Pneumatics**.
